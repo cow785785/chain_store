@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `members` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` varchar(36) NOT NULL,
   `useraccount` varchar(50) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `members` (
   PRIMARY KEY (`id`)
 );
 CREATE TABLE IF NOT EXISTS `products` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` varchar(36) NOT NULL,
   `product_code` varchar(20) DEFAULT NULL,
   `product_name` varchar(100) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS `products` (
   PRIMARY KEY (`id`)
 );
 CREATE TABLE IF NOT EXISTS `orderdetails` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` varchar(36) NOT NULL,
   `order_number` varchar(20) DEFAULT NULL,
-  `member_id` int DEFAULT NULL,
-  `products_id` int DEFAULT NULL,
+  `member_id` varchar(36) DEFAULT NULL,
+  `products_id` varchar(36) DEFAULT NULL,
   `useraccount` varchar(50) DEFAULT NULL,
   `product_code` varchar(20) DEFAULT NULL,
   `product_price` decimal(10,2) DEFAULT NULL,
