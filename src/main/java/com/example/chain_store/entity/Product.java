@@ -1,19 +1,26 @@
 package com.example.chain_store.entity;
 
-import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "products")
 public class Product {
 
 	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id")
-	private String id;
+	@Type(type = "org.hibernate.type.UUIDCharType")
+	private UUID id;
 
 	@Column(name = "product_code")
 	private String productCode;
@@ -22,17 +29,17 @@ public class Product {
 	private String productName;
 
 	@Column(name = "price")
-	private int price;
+	private Integer price;
 
 	@Column(name = "category")
-	private Date category;
+	private String category;
 
 	public Product() {
 		super();
 	}
 
-	public Product(String id, String productCode, String productName, int price,
-			Date category) {
+	public Product(UUID id, String productCode, String productName, Integer price,
+			String category) {
 		super();
 		this.id = id;
 		this.productCode = productCode;
@@ -41,11 +48,11 @@ public class Product {
 		this.category = category;
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -65,19 +72,19 @@ public class Product {
 		this.productName = productName;
 	}
 
-	public int getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
-	public Date getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(Date category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
