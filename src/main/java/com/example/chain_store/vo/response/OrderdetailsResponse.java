@@ -18,12 +18,10 @@ public class OrderdetailsResponse {
 	}
 
 	public OrderdetailsResponse(String message) {
-		super();
 		this.message = message;
 	}
 
 	public OrderdetailsResponse(List<Orderdetails> orderList, String message) {
-		super();
 		this.orderList = orderList;
 		this.message = message;
 	}

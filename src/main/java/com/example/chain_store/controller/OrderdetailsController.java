@@ -21,16 +21,17 @@ public class OrderdetailsController {
 	@Autowired
 	private OrderdetailsService orderdetailsService;
 
+	@PostMapping("/new_order")
 	public OrderdetailsResponse newOrder(@RequestBody OrderdetailsRequest request) {
-		return new OrderdetailsResponse();
+		return orderdetailsService.newOrder(request);
 	}
 
 	public OrderdetailsResponse updateOrder(@RequestBody OrderdetailsRequest request) {
-		return new OrderdetailsResponse();
+		return new OrderdetailsResponse("功能未完成");
 	}
 
 	public OrderdetailsResponse delOrder(@RequestBody OrderdetailsRequest request) {
-		return new OrderdetailsResponse();
+		return new OrderdetailsResponse("功能未完成");
 	}
 
 	// 取得整個資料表

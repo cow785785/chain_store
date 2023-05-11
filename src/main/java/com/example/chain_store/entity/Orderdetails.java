@@ -41,72 +41,94 @@ public class Orderdetails {
 	@Column(name = "order_status")
 	private String orderStatus;
 	@Column(name = "order_time")
-	private Timestamp order_time;
+	private Timestamp orderTime;
+
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	public String getOrderNumber() {
 		return orderNumber;
 	}
+
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
+
 	public Members getMemberId() {
 		return memberId;
 	}
+
 	public void setMemberId(Members memberId) {
 		this.memberId = memberId;
 	}
+
 	public Products getProductsId() {
 		return productsId;
 	}
+
 	public void setProductsId(Products productsId) {
 		this.productsId = productsId;
 	}
+
 	public String getUseraccount() {
 		return useraccount;
 	}
+
 	public void setUseraccount(String useraccount) {
 		this.useraccount = useraccount;
 	}
+
 	public String getProductCode() {
 		return productCode;
 	}
+
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
+
 	public BigDecimal getProductPrice() {
 		return productPrice;
 	}
+
 	public void setProductPrice(BigDecimal productPrice) {
 		this.productPrice = productPrice;
 	}
+
 	public int getQuantity() {
 		return quantity;
 	}
+
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
 	public String getDeliveryAddress() {
 		return deliveryAddress;
 	}
+
 	public void setDeliveryAddress(String deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
+
 	public String getOrderStatus() {
 		return orderStatus;
 	}
+
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-	public Timestamp getOrder_time() {
-		return order_time;
+
+	public Timestamp getOrderTime() {
+		return orderTime;
 	}
-	public void setOrder_time(Timestamp order_time) {
-		this.order_time = order_time;
+
+	public void setOrderTime(Timestamp orderTime) {
+		this.orderTime = orderTime;
 	}
 
 }
