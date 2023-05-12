@@ -70,40 +70,51 @@ public class ProductServiceImpl implements ProductService {
 //	更新商品內容
 	@Override
 	public ProductResponse updateProduct(ProductRequest req) {
-//		此次想更正的商品資料
-//		如果只想改單個欄位應該能透過前端先抓該商品的全部資料後再修正資料
-//		商品代碼不得修改
+
+//		此次想更正的商品資料；商品代碼不得修改
 		Product reqProduct = req.getProduct();
+
 //		防呆 
 //		商品代碼 是否為空 
 		if (!StringUtils.hasText(reqProduct.getProductCode())) {
 			return new ProductResponse("請輸入商品代碼!");
 		}
+
 //		商品代碼 是否已存在
 		if (productDao.findByProductCode(reqProduct.getProductCode()) == null) {
 			return new ProductResponse("商品代碼錯誤!");
 		}
+
 //		從資料庫取出要修改的商品
 		Product updatedProduct = productDao
 				.findByProductCode(reqProduct.getProductCode());
+
 // 		名稱 是否不為空
 		if (!StringUtils.hasText(updatedProduct.getProductName())) {
 			return new ProductResponse("請輸入商品名稱!");
 		} else {
 			updatedProduct.setProductName(reqProduct.getProductName());
 		}
+
 //		價錢 	是否不為空
-		if (!StringUtils.hasText(updatedProduct.getProductCode())) {
+		if (reqProduct.getPrice() == null) {
 			return new ProductResponse("請輸入商品價格!");
+		}
+//		價錢 	是否不小於0
+		if (reqProduct.getPrice() <= 0) {
+			return new ProductResponse("商品價格不得小於0!");
 		} else {
 			updatedProduct.setPrice(reqProduct.getPrice());
 		}
+
 //		分類 	是否不為空
-		if (!StringUtils.hasText(updatedProduct.getProductCode())) {
+		if (!StringUtils.hasText(updatedProduct.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
 		} else {
 			updatedProduct.setCategory(reqProduct.getCategory());
 		}
+
+//		確認無誤修改資料
 		productDao.save(updatedProduct);
 		return new ProductResponse("更新商品成功!");
 
@@ -116,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
 			return new ProductResponse("請輸入商品名稱!");
 		}
 		List<Product> productList = productDao.findByProductName(req.getProductName());
-//		商品代碼 是否已存在
+//		確認是否有該商品名稱
 		if (productList.size() == 0) {
 			return new ProductResponse("找無此商品!");
 		}

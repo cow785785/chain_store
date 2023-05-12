@@ -48,7 +48,7 @@ public class ProductController {
 		return productService.findProductByCategory(req);
 	}
 
-	@PostMapping("/find_product_by_code")
+	@PostMapping("/find_all_product")
 	public List<Product> findAllProduct(@RequestBody ProductRequest req) {
 		return productService.findAllProduct(req);
 	}
