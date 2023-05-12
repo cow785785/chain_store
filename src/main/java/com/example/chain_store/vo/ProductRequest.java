@@ -10,6 +10,8 @@ public class ProductRequest {
 
 	private String productName;
 
+	private String category;
+
 	public Product getProduct() {
 		return product;
 	}
@@ -32,6 +34,14 @@ public class ProductRequest {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }
