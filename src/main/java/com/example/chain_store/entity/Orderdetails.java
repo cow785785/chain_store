@@ -2,13 +2,18 @@ package com.example.chain_store.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -18,8 +23,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Orderdetails {
 
 	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Type(type = "org.hibernate.type.UUIDCharType")
 	@Column(name = "id")
-	private String id;
+	private UUID id;
 	@Column(name = "order_number")
 	private String orderNumber;
 	@ManyToOne
@@ -43,11 +51,11 @@ public class Orderdetails {
 	@Column(name = "order_time")
 	private Timestamp orderTime;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

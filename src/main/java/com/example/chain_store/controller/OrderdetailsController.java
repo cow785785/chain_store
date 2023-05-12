@@ -26,12 +26,14 @@ public class OrderdetailsController {
 		return orderdetailsService.newOrder(request);
 	}
 
+	@PostMapping("/update_order")
 	public OrderdetailsResponse updateOrder(@RequestBody OrderdetailsRequest request) {
-		return new OrderdetailsResponse("功能未完成");
+		return orderdetailsService.updateOrder(request);
 	}
 
+	@PostMapping("/del_order")
 	public OrderdetailsResponse delOrder(@RequestBody OrderdetailsRequest request) {
-		return new OrderdetailsResponse("功能未完成");
+		return orderdetailsService.delOrder(request);
 	}
 
 	// 取得整個資料表
