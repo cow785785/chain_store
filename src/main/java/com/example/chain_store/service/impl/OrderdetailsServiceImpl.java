@@ -5,13 +5,17 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.example.chain_store.entity.Members;
 import com.example.chain_store.entity.Orderdetails;
+import com.example.chain_store.entity.Products;
+import com.example.chain_store.repository.MembersDao;
 import com.example.chain_store.repository.OrderdetailsDao;
 import com.example.chain_store.service.ifs.OrderdetailsService;
 import com.example.chain_store.vo.request.OrderdetailsRequest;
@@ -22,6 +26,9 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 
 	@Autowired
 	private OrderdetailsDao orderdetailsDao;
+
+	@Autowired
+	private MembersDao membersDao;
 
 	@Override
 	public OrderdetailsResponse newOrder(OrderdetailsRequest request) {
@@ -61,6 +68,18 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				return new OrderdetailsResponse(checkResult);
 			} else {// 開始寫入初始資料
 
+				Optional<Members> memberOP = membersDao.findByUseraccount(order.getUseraccount());
+				if (!memberOP.isPresent()) {
+					return new OrderdetailsResponse(order.getUseraccount() + "不存在。");
+				}
+				order.setMemberId(memberOP.get());
+				
+//				Optional<Products> productsOP = productsDao.findByProductCode(order.getProductCode());
+//				if (!productsOP.isPresent()) {
+//					return new OrderdetailsResponse(order.getProductCode() + "不存在。");
+//				}
+//				order.setProductsId(productsOP.get());
+				
 				// 設定初始訂單狀態
 				order.setOrderStatus("收到訂單");
 				// 設定訂單時間，將當前系統時間寫入
@@ -82,6 +101,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		if (CollectionUtils.isEmpty(orderList)) {
 			return new OrderdetailsResponse("沒有資料新增");
 		}
+		orderdetailsDao.saveAll(orderList);
 		return new OrderdetailsResponse(orderList, "新增成功");
 	}
 
