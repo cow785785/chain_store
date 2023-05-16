@@ -17,33 +17,33 @@ import com.example.chain_store.vo.MembersResponse;
 @CrossOrigin
 @RestController
 public class MemberController {
-	
+
 	@Autowired
 	private MembersDao membersDao;
-	
+
 	@Autowired
 	private MembersService membersService;
-	
+
 	@PostMapping("/addMember")
 	public MembersResponse addMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.addMember(memberRequest);
 	}
-	
+
 	@PostMapping("/readMember")
 	public List<Members> readMember() {
 		return membersDao.findAll();
 	}
-	
+
 	@PostMapping("/selectMember")
 	public MembersResponse selectMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.selectMember(memberRequest);
 	}
-	
+
 	@PostMapping("/updateMember")
 	public MembersResponse updateMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.updateMember(memberRequest);
 	}
-	
+
 	@PostMapping("/deleteMember")
 	public MembersResponse deleteMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.deleteMember(memberRequest);

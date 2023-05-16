@@ -23,26 +23,25 @@ public class MemberServiceImpl implements MembersService {
 
 	@Autowired
 	private MembersDao membersDao;
-
-	// 其他電話格式
+	//電話番号検査
 	//指定された形式に電話番号が一致するかどうかを検証します。
 	//電話番号がnullまたは空の文字列かどうかをチェックし、その場合はfalseを返します。
 	//正規表現"(09-\\d{8})|(886-9\\d{7})"を使用して、電話番号の形式を検証します。
 	//電話番号が数字のみで構成され、"09-xxxxxxxx"または"886-9xxxxxxx"という形式であることを仮定しています（xは数字を表します）。
 	//電話番号が形式の要件を満たしている場合はtrueを返し、そうでなければfalseを返します。
 	public boolean checkPhoneNumber(String phoneNumber) {
-		// 檢查電話號碼是否為非空值
+		// 電話番号が空でないかを確認します。(檢查電話號碼是否為非空值)
 		if (phoneNumber == null || phoneNumber.isEmpty()) {
 			return false;
 		}
 
-		// 使用正則表達式驗證電話號碼的格式是否符合要求
-		// 這裡假設電話號碼只包含數字，長度為10位
+		// 電話番号の形式が要件に適合しているかを正規表現を使用して検証します(使用正則表達式驗證電話號碼的格式是否符合要求)
+		// 電話番号が数字のみで構成され、長さが10桁であると仮定します。(這裡假設電話號碼只包含數字，長度為10位)
 		String pattern = "(09-\\d{8})|(886-9\\d{7})";
 		return phoneNumber.matches(pattern);
 	}
 
-	// 生日範圍驗證
+	// 誕生日検査(生日範圍驗證)
 	public boolean checkBirthDay(Date birthDate) {
 		if (birthDate == null) {
 			return false;
@@ -50,28 +49,28 @@ public class MemberServiceImpl implements MembersService {
 
 		LocalDate currentDate = LocalDate.now();
 
-		// 将 java.util.Date 转换为 java.time.LocalDate
+		// 將 java.util.Date 轉換為 java.time.LocalDate
 		Instant instant = birthDate.toInstant();
 		ZoneId zone = ZoneId.systemDefault();
 		LocalDate birthLocalDate = instant.atZone(zone).toLocalDate();
 
-		// 检查生日是否在有效範圍內
+		// 生年月日が有効な範囲内にあるかを検査する(検査生日是否在有效範圍內)
 		if (birthLocalDate.isAfter(currentDate)) {
 			return false;
 		}
 
-		// 检查其他生日限制条件，比如最小或最大年龄
-		LocalDate minimumValidDate = currentDate.minusYears(150); // 假设最小年龄为150岁
-		LocalDate maximumValidDate = currentDate.minusYears(0); // 假设最大年龄为0岁
+		// 他の誕生日条件、例えば最小または最大年齢をチェックします。(檢查其他生日條件，例如最小或最大年齡)
+		LocalDate maximumValidDate = currentDate.minusYears(150); // 最小年齢を150歳と仮定します。(假設最大年齡為150歲)
+		LocalDate minimumValidDate = currentDate.minusYears(0); // 最小年齢を0歳と仮定します。(假設最小年齡為0歲)
 
-		if (birthLocalDate.isBefore(minimumValidDate) || birthLocalDate.isAfter(maximumValidDate)) {
+		if (birthLocalDate.isBefore(maximumValidDate) || birthLocalDate.isAfter(minimumValidDate)) {
 			return false;
 		}
 
 		return true;
 	}
 
-	// 規範密碼必須有大寫字母
+	// パスワードに大文字のアルファベットを含むことが要件とされます。(規範密碼必須有大寫字母)
 	private boolean containsUppercase(String password) {
 		for (int i = 0; i < password.length(); i++) {
 			if (Character.isUpperCase(password.charAt(i))) {
@@ -114,7 +113,7 @@ public class MemberServiceImpl implements MembersService {
 				|| memberRequest.getUseraccount().isEmpty() || memberRequest.getPassword() == null
 				|| memberRequest.getPassword().isEmpty() || memberRequest.getUsername() == null
 				|| memberRequest.getUsername().isEmpty() || memberRequest.getAddress() == null
-				|| memberRequest.getAddress().isEmpty() || memberRequest.getRegistrationTime() == null) {
+				|| memberRequest.getAddress().isEmpty()) {
 			return new MembersResponse("失敗！輸入值不能為空");
 		}
 
@@ -130,7 +129,7 @@ public class MemberServiceImpl implements MembersService {
 		Members savedMember = membersDao.save(members);
 		return new MembersResponse(memberRequest.getUseraccount(), memberRequest.getPassword(),
 				memberRequest.getUsername(), memberRequest.getBirthDate(), memberRequest.getAddress(),
-				memberRequest.getPhone(), memberRequest.getRegistrationTime(), "註冊成功");
+				memberRequest.getPhone(), "註冊成功");
 	}
 
 	@Override
@@ -198,7 +197,7 @@ public class MemberServiceImpl implements MembersService {
 		Members updatedMember = membersDao.save(members);
 		return new MembersResponse(updatedMember.getUseraccount(), updatedMember.getPassword(),
 				updatedMember.getUsername(), updatedMember.getBirthDate(), updatedMember.getAddress(),
-				updatedMember.getPhone(), members.getRegistrationTime(), "更新成功");
+				updatedMember.getPhone(),"更新成功");
 	}
 
 	@Override
