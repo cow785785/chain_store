@@ -2,7 +2,6 @@ package com.example.chain_store.entity;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -13,9 +12,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.example.chain_store.repository.MembersDao;
 
 @Entity
 @Table(name = "members")

@@ -1,4 +1,4 @@
-package com.example.chain_store.contrtoller;
+package com.example.chain_store.controller;
 
 import java.util.List;
 

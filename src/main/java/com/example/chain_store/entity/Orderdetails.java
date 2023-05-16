@@ -35,7 +35,7 @@ public class Orderdetails {
 	private Members memberId;
 	@ManyToOne
 	@JoinColumn(name = "products_id", referencedColumnName = "id")
-	private Products productsId;
+	private Product productsId;
 	@Column(name = "useraccount")
 	private String useraccount;
 	@Column(name = "product_code")
@@ -75,11 +75,13 @@ public class Orderdetails {
 		this.memberId = memberId;
 	}
 
-	public Products getProductsId() {
+	
+
+	public Product getProductsId() {
 		return productsId;
 	}
 
-	public void setProductsId(Products productsId) {
+	public void setProductsId(Product productsId) {
 		this.productsId = productsId;
 	}
 

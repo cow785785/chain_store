@@ -14,9 +14,10 @@ import org.springframework.util.StringUtils;
 
 import com.example.chain_store.entity.Members;
 import com.example.chain_store.entity.Orderdetails;
-import com.example.chain_store.entity.Products;
+import com.example.chain_store.entity.Product;
 import com.example.chain_store.repository.MembersDao;
 import com.example.chain_store.repository.OrderdetailsDao;
+import com.example.chain_store.repository.ProductDao;
 import com.example.chain_store.service.ifs.OrderdetailsService;
 import com.example.chain_store.vo.request.OrderdetailsRequest;
 import com.example.chain_store.vo.response.OrderdetailsResponse;
@@ -29,6 +30,9 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 
 	@Autowired
 	private MembersDao membersDao;
+
+	@Autowired
+	private ProductDao productDao;
 
 	@Override
 	public OrderdetailsResponse newOrder(OrderdetailsRequest request) {
@@ -73,13 +77,13 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 					return new OrderdetailsResponse(order.getUseraccount() + "不存在。");
 				}
 				order.setMemberId(memberOP.get());
-				
-//				Optional<Products> productsOP = productsDao.findByProductCode(order.getProductCode());
-//				if (!productsOP.isPresent()) {
-//					return new OrderdetailsResponse(order.getProductCode() + "不存在。");
-//				}
-//				order.setProductsId(productsOP.get());
-				
+
+				Product product = productDao.findByProductCode(order.getProductCode());
+				if (product == null) {
+					return new OrderdetailsResponse(order.getProductCode() + "不存在。");
+				}
+				order.setProductsId(product);
+
 				// 設定初始訂單狀態
 				order.setOrderStatus("收到訂單");
 				// 設定訂單時間，將當前系統時間寫入
