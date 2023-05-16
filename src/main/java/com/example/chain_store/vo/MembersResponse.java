@@ -31,18 +31,34 @@ public class MembersResponse {
 	public MembersResponse() {
 
 	}
+	
+	
 
-	public MembersResponse(String userAccount, String password, String userName, Date birthDate,
-			String address, String phone, Timestamp registrationTime, String message) {
+	public MembersResponse(String userAccount, String password, String userName, Date birthDate, String address,
+			String phone, String message) {
+		super();
 		this.userAccount = userAccount;
 		this.password = password;
 		this.userName = userName;
 		this.birthDate = birthDate;
 		this.address = address;
 		this.phone = phone;
-		this.registrationTime = registrationTime;
 		this.message = message;
 	}
+
+
+
+//	public MembersResponse(String userAccount, String password, String userName, Date birthDate,
+//			String address, String phone, Timestamp registrationTime, String message) {
+//		this.userAccount = userAccount;
+//		this.password = password;
+//		this.userName = userName;
+//		this.birthDate = birthDate;
+//		this.address = address;
+//		this.phone = phone;
+//		this.registrationTime = registrationTime;
+//		this.message = message;
+//	}
 
 	public MembersResponse(String message,String userAccount, String userName, Date birthDate, String address, String phone) {
 		this.message = message;

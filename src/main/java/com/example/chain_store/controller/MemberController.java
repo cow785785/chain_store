@@ -3,6 +3,7 @@ package com.example.chain_store.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,7 @@ import com.example.chain_store.repository.MembersDao;
 import com.example.chain_store.service.ifs.MembersService;
 import com.example.chain_store.vo.MemberRequest;
 import com.example.chain_store.vo.MembersResponse;
-
+@CrossOrigin
 @RestController
 public class MemberController {
 	
