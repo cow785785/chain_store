@@ -31,6 +31,15 @@ public class Product {
 	@Column(name = "price")
 	private Integer price;
 
+	@Column(name = "product_img")
+	private byte[] productImg;
+
+	@Column(name = "product_info")
+	private String productInfo;
+
+	@Column(name = "product_describe")
+	private String productDescribe;
+
 	@Column(name = "category")
 	private String category;
 
@@ -39,12 +48,16 @@ public class Product {
 	}
 
 	public Product(UUID id, String productCode, String productName, Integer price,
+			byte[] productImg, String productInfo, String productDescribe,
 			String category) {
 		super();
 		this.id = id;
 		this.productCode = productCode;
 		this.productName = productName;
 		this.price = price;
+		this.productImg = productImg;
+		this.productInfo = productInfo;
+		this.productDescribe = productDescribe;
 		this.category = category;
 	}
 
@@ -86,6 +99,30 @@ public class Product {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public byte[] getProductImg() {
+		return productImg;
+	}
+
+	public void setProductImg(byte[] productImg) {
+		this.productImg = productImg;
+	}
+
+	public String getProductInfo() {
+		return productInfo;
+	}
+
+	public void setProductInfo(String productInfo) {
+		this.productInfo = productInfo;
+	}
+
+	public String getProductDescribe() {
+		return productDescribe;
+	}
+
+	public void setProductDescribe(String productDescribe) {
+		this.productDescribe = productDescribe;
 	}
 
 }
