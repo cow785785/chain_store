@@ -48,6 +48,17 @@ public class ProductServiceImpl implements ProductService {
 //		分類 	是否不為空
 		if (!StringUtils.hasText(product.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
+		} // 圖片 是否不為空
+		if (product.getProductImg() == null) {
+			return new ProductResponse("請上傳圖片!");
+		}
+//		商品簡述 	是否不為空
+		if (!StringUtils.hasText(product.getProductInfo())) {
+			return new ProductResponse("請輸入商品簡述!");
+		}
+//		商品詳細描述 	是否不為空
+		if (!StringUtils.hasText(product.getProductDescribe())) {
+			return new ProductResponse("請輸入商品詳細描述!");
 		}
 
 		productDao.save(product);
@@ -113,6 +124,24 @@ public class ProductServiceImpl implements ProductService {
 			return new ProductResponse("請輸入商品分類!");
 		} else {
 			updatedProduct.setCategory(reqProduct.getCategory());
+		}
+//		圖片 	是否不為空
+		if (reqProduct.getProductImg() == null) {
+			return new ProductResponse("請上傳圖片!");
+		} else {
+			updatedProduct.setProductImg(reqProduct.getProductImg());
+		}
+//		商品簡述 	是否不為空
+		if (!StringUtils.hasText(reqProduct.getProductInfo())) {
+			return new ProductResponse("請輸入商品簡述!");
+		} else {
+			updatedProduct.setProductInfo(reqProduct.getProductInfo());
+		}
+//		商品詳細描述 	是否不為空
+		if (!StringUtils.hasText(reqProduct.getProductDescribe())) {
+			return new ProductResponse("請輸入商品詳細描述!");
+		} else {
+			updatedProduct.setProductDescribe(reqProduct.getProductDescribe());
 		}
 
 //		確認無誤修改資料
