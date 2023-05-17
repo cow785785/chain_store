@@ -40,8 +40,8 @@ public class Orderdetails {
 	private String useraccount;
 	@Column(name = "product_code")
 	private String productCode;
-	@Column(name = "product_price")
-	private BigDecimal productPrice;
+	@Column(name = "total_price")
+	private BigDecimal totalPrice;
 	@Column(name = "quantity")
 	private int quantity;
 	@Column(name = "delivery_address")
@@ -57,6 +57,14 @@ public class Orderdetails {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 	public String getOrderNumber() {
@@ -101,13 +109,7 @@ public class Orderdetails {
 		this.productCode = productCode;
 	}
 
-	public BigDecimal getProductPrice() {
-		return productPrice;
-	}
-
-	public void setProductPrice(BigDecimal productPrice) {
-		this.productPrice = productPrice;
-	}
+	
 
 	public int getQuantity() {
 		return quantity;
