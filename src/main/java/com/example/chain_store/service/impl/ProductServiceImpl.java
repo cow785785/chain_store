@@ -49,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
 		if (!StringUtils.hasText(product.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
 		}
-
 		productDao.save(product);
 		return new ProductResponse("新增商品成功!");
 	}
