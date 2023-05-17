@@ -49,18 +49,7 @@ public class ProductServiceImpl implements ProductService {
 		if (!StringUtils.hasText(product.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
 		}
-//		圖片 	是否不為空
-		if (product.getProductImg() == null) {
-			return new ProductResponse("請上傳圖片!");
-		}
-//		商品簡述 	是否不為空
-		if (!StringUtils.hasText(product.getProductInfo())) {
-			return new ProductResponse("請輸入商品簡述!");
-		}
-//		商品詳細描述 	是否不為空
-		if (!StringUtils.hasText(product.getProductDescribe())) {
-			return new ProductResponse("請輸入商品詳細描述!");
-		}
+
 		productDao.save(product);
 		return new ProductResponse("新增商品成功!");
 	}
