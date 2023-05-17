@@ -18,4 +18,6 @@ public interface MembersService {
 	public MembersResponse updateMember(MemberRequest memberRequest);//更新會員
 	
 	public MembersResponse deleteMember(MemberRequest memberRequest);//刪除會員
+	
+	public MembersResponse loginMember(MemberRequest memberRequest);//登錄會員
 }

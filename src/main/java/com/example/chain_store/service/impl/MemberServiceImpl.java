@@ -157,8 +157,7 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("親!您的帳號不存在或是帳號錯誤");
 		}
 		Members members = optional.get();
-		return new MembersResponse("以下是您的資訊", members.getUseraccount(), members.getUsername(), members.getBirthDate(),
-				members.getAddress(), members.getPhone());
+		return new MembersResponse(members.getUseraccount(),members.getPassword(),members.getUsername(),members.getBirthDate(),members.getAddress(),members.getPhone());
 	}
 
 	@Override
@@ -173,16 +172,19 @@ public class MemberServiceImpl implements MembersService {
 		if (memberRequest.getBirthDate() == null) {
 			return new MembersResponse("失敗！生日欄位為必填欄位");
 		}
+		if(!checkBirthDay(memberRequest.getBirthDate())) {
+			return new MembersResponse(memberRequest.getPhone(),"失敗！生日格式無效");
+		}
 
 		// 檢查電話
 		if (!checkPhoneNumber(memberRequest.getPhone())) {
-			return new MembersResponse("失敗！電話號碼格式無效");
+			return new MembersResponse(memberRequest.getPhone(),"失敗！電話號碼格式無效");
 		}
 
 		// 檢查帳號是否已經存在
 		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
-		if (optionMember.isPresent()) {
-			return new MembersResponse("失敗！帳號已存在");
+		if (!optionMember.isPresent()) {
+			return new MembersResponse(memberRequest.getUseraccount(),"失敗！帳號不存在");
 		}
 
 		if (members != null) {
@@ -194,7 +196,7 @@ public class MemberServiceImpl implements MembersService {
 			members.setAddress(memberRequest.getAddress());
 			members.setPhone(memberRequest.getPhone());
 		} else {
-			return new MembersResponse("找不到該會員，更新失敗");
+			return new MembersResponse(memberRequest.getUseraccount(),"找不到該會員，更新失敗");
 		}
 
 		Members updatedMember = membersDao.save(members);
@@ -212,13 +214,31 @@ public class MemberServiceImpl implements MembersService {
 		// 檢查帳號是否存在
 		Optional<Members> optionalStudent = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (!optionalStudent.isPresent()) {
-			return new MembersResponse("帳號不存在");
+			return new MembersResponse(memberRequest.getUseraccount(),"帳號不存在");
 		}
 		// 刪除帳號
 		Members members = optionalStudent.get();
 		membersDao.delete(members);
 
-		return new MembersResponse("刪除成功");
+		return new MembersResponse(memberRequest.getUseraccount(),"刪除成功");
+	}
+	
+	
+	
+	//登錄用API
+	@Override
+	public MembersResponse loginMember(MemberRequest memberRequest) {
+		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+	    if (optionalMember.isPresent()) {
+	        Members member = optionalMember.get();
+	        if (!member.getPassword().equals(memberRequest.getPassword())) {
+	        	return new MembersResponse("帳號密碼驗證失敗");
+	        } 
+	    
+	}else {
+		return new MembersResponse("帳號密碼驗證失敗");
+	}
+	    return new MembersResponse(optionalMember.get().getUsername(),"登錄成功");
 	}
 
 }

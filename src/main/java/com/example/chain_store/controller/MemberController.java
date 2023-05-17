@@ -2,6 +2,8 @@ package com.example.chain_store.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +48,13 @@ public class MemberController {
 	@PostMapping("/deleteMember")
 	public MembersResponse deleteMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.deleteMember(memberRequest);
+	}
+	
+	@PostMapping("/loginMember")
+	public MembersResponse loginMember(@RequestBody MemberRequest memberRequest,HttpSession httpSession){
+		httpSession.setAttribute("useraccount", memberRequest.getUseraccount());
+		httpSession.setAttribute("password", memberRequest.getPassword());
+	    return membersService.loginMember(memberRequest);
 	}
 
 }

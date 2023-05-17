@@ -33,10 +33,10 @@ public class MembersResponse {
 	}
 	
 	
+	
 
 	public MembersResponse(String userAccount, String password, String userName, Date birthDate, String address,
 			String phone, String message) {
-		super();
 		this.userAccount = userAccount;
 		this.password = password;
 		this.userName = userName;
@@ -84,6 +84,8 @@ public class MembersResponse {
 //		this.registrationTime = registrationTime;
 //		this.message = message;
 //	}
+	
+	
 
 	public MembersResponse(String password, String userName, Date birthDate, String address, String phone,
 			String message) {
@@ -96,12 +98,23 @@ public class MembersResponse {
 		this.message = message;
 	}
 
+
+
+
+
+	public MembersResponse(String message) {
+		this.message = message;
+	}
+
+
+
 	public MembersResponse(List<Members> members, String message) {
 		this.members = members;
 		this.message = message;
 	}
 
-	public MembersResponse(String message) {
+	public MembersResponse(String userName,String message) {
+		this.userName = userName;
 		this.message = message;
 	}
 
