@@ -19,5 +19,5 @@ public interface ProductService {
 
 	public ProductResponse findProductByCategory(ProductRequest req);
 
-	public List<Product> findAllProduct(ProductRequest req);
+	public List<Product> findAllProduct();
 }
