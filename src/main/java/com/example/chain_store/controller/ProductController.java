@@ -3,8 +3,10 @@ package com.example.chain_store.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.chain_store.entity.Product;
@@ -12,6 +14,7 @@ import com.example.chain_store.service.ifs.ProductService;
 import com.example.chain_store.vo.ProductRequest;
 import com.example.chain_store.vo.ProductResponse;
 
+@CrossOrigin
 @RestController
 public class ProductController {
 
@@ -48,9 +51,9 @@ public class ProductController {
 		return productService.findProductByCategory(req);
 	}
 
-	@PostMapping("/find_all_product")
-	public List<Product> findAllProduct(@RequestBody ProductRequest req) {
-		return productService.findAllProduct(req);
+	@RequestMapping("/find_all_product")
+	public List<Product> findAllProduct() {
+		return productService.findAllProduct();
 	}
 
 }

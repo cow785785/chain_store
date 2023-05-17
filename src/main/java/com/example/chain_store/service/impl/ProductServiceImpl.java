@@ -166,7 +166,7 @@ public class ProductServiceImpl implements ProductService {
 
 //	找所有商品
 	@Override
-	public List<Product> findAllProduct(ProductRequest req) {
+	public List<Product> findAllProduct() {
 		return productDao.findAll();
 	}
 
