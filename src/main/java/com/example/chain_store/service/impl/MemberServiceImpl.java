@@ -23,12 +23,13 @@ public class MemberServiceImpl implements MembersService {
 
 	@Autowired
 	private MembersDao membersDao;
-	//電話番号検査
-	//指定された形式に電話番号が一致するかどうかを検証します。
-	//電話番号がnullまたは空の文字列かどうかをチェックし、その場合はfalseを返します。
-	//正規表現"(09-\\d{8})|(886-9\\d{7})"を使用して、電話番号の形式を検証します。
-	//電話番号が数字のみで構成され、"09-xxxxxxxx"または"886-9xxxxxxx"という形式であることを仮定しています（xは数字を表します）。
-	//電話番号が形式の要件を満たしている場合はtrueを返し、そうでなければfalseを返します。
+
+	// 電話番号検査
+	// 指定された形式に電話番号が一致するかどうかを検証します。
+	// 電話番号がnullまたは空の文字列かどうかをチェックし、その場合はfalseを返します。
+	// 正規表現"(09-\\d{8})|(886-9\\d{7})"を使用して、電話番号の形式を検証します。
+	// 電話番号が数字のみで構成され、"09-xxxxxxxx"または"886-9xxxxxxx"という形式であることを仮定しています（xは数字を表します）。
+	// 電話番号が形式の要件を満たしている場合はtrueを返し、そうでなければfalseを返します。
 	public boolean checkPhoneNumber(String phoneNumber) {
 		// 電話番号が空でないかを確認します。(檢查電話號碼是否為非空值)
 		if (phoneNumber == null || phoneNumber.isEmpty()) {
@@ -150,7 +151,7 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		Optional<Members> optional = membersDao.findByUseraccount(memberRequest.getUseraccount());
-		if (optional.isPresent()) {
+		if (!optional.isPresent()) {
 			return new MembersResponse("親!您的帳號不存在或是帳號錯誤");
 		}
 		Members members = optional.get();
@@ -197,7 +198,7 @@ public class MemberServiceImpl implements MembersService {
 		Members updatedMember = membersDao.save(members);
 		return new MembersResponse(updatedMember.getUseraccount(), updatedMember.getPassword(),
 				updatedMember.getUsername(), updatedMember.getBirthDate(), updatedMember.getAddress(),
-				updatedMember.getPhone(),"更新成功");
+				updatedMember.getPhone(), "更新成功");
 	}
 
 	@Override
@@ -216,6 +217,20 @@ public class MemberServiceImpl implements MembersService {
 		membersDao.delete(members);
 
 		return new MembersResponse("刪除成功");
+	}
+
+	@Override
+	public MembersResponse loginMember(MemberRequest memberRequest) {
+		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		if (!optionalMember.isPresent()) {
+			return new MembersResponse("帳號密碼驗證失敗");
+		}
+		Members member = optionalMember.get();
+		if (!member.getPassword().equals(memberRequest.getPassword())) {
+			return new MembersResponse("帳號密碼驗證失敗");
+		}
+
+		return new MembersResponse(member.getUsername(), "登錄成功");
 	}
 
 }

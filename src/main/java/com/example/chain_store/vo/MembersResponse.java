@@ -34,6 +34,14 @@ public class MembersResponse {
 	
 	
 
+	public MembersResponse(String userName, String message) {
+		super();
+		this.userName = userName;
+		this.message = message;
+	}
+
+
+
 	public MembersResponse(String userAccount, String password, String userName, Date birthDate, String address,
 			String phone, String message) {
 		super();

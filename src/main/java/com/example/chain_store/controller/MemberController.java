@@ -48,5 +48,10 @@ public class MemberController {
 	public MembersResponse deleteMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.deleteMember(memberRequest);
 	}
+	
+	@PostMapping("/loginMember")
+	public MembersResponse loginMember(@RequestBody MemberRequest memberRequest) {
+		return membersService.loginMember(memberRequest);
+	}
 
 }

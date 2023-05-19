@@ -46,6 +46,14 @@ public class Product {
 	public Product() {
 		super();
 	}
+	
+	
+
+	public Product(String productCode) {
+		this.productCode = productCode;
+	}
+
+
 
 	public Product(UUID id, String productCode, String productName, Integer price,
 			byte[] productImg, String productInfo, String productDescribe,

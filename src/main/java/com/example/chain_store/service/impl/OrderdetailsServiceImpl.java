@@ -122,19 +122,23 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 			boolean isUpdated = false;
 			Orderdetails orderdetail = orderdetailsDao.findByOrderNumber(orderNumber);
 			if (orderdetail == null) {
-				return new OrderdetailsResponse("請檢查訂單號" + orderNumber);
+				return new OrderdetailsResponse("訂單號" + orderNumber + "不存在。");
 			}
-			if (StringUtils.hasText(order.getOrderStatus())) {// 若有值則更改訂單狀態
+			if (StringUtils.hasText(order.getOrderStatus())) {
 				orderdetail.setOrderStatus(order.getOrderStatus());
-				isUpdated = true;
+				isUpdated = true;// 若有值則更改訂單狀態
 			}
-			if (StringUtils.hasText(order.getDeliveryAddress())) {// 若有值則更改寄貨地址
+			if (StringUtils.hasText(order.getDeliveryAddress())) {
 				orderdetail.setDeliveryAddress(order.getDeliveryAddress());
-				isUpdated = true;
+				isUpdated = true;// 若有值則更改寄貨地址
 			}
-			if (order.getQuantity() > 0 && order.getQuantity() != orderdetail.getQuantity()) {// 若有變動則變更數量
+			if (order.getTotalPrice().compareTo(orderdetail.getTotalPrice()) != 0) {
+				orderdetail.setTotalPrice(order.getTotalPrice());
+				isUpdated = true;// 若有變動則變更
+			}
+			if (order.getQuantity() > 0 && order.getQuantity() != orderdetail.getQuantity()) {
 				orderdetail.setQuantity(order.getQuantity());
-				isUpdated = true;
+				isUpdated = true;// 若有變動則變更數量
 			}
 			if (isUpdated) {
 				upList.add(orderdetail);
@@ -192,8 +196,8 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		// 檢查商品金額是否大於0
 		// BigDecimal.ZERO為BigDecimal類別的0
 		// 判斷式類似於(productPrice - 0)<=0，其中(productPrice - 0)為BigDecimal類別
-		if (order.getProductPrice().compareTo(BigDecimal.ZERO) <= 0) {
-			return "product_price異常";
+		if (order.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
+			return "total_price異常";
 		}
 		// 判斷數量quantity
 		if (order.getQuantity() <= 0) {
