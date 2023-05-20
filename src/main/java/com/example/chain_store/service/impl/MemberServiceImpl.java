@@ -177,11 +177,11 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("失敗！電話號碼格式無效");
 		}
 
-		// 檢查帳號是否已經存在
-		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
-		if (optionMember.isPresent()) {
-			return new MembersResponse("失敗！帳號已存在");
-		}
+//		// 檢查帳號是否已經存在
+//		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+//		if (optionMember.isPresent()) {
+//			return new MembersResponse("失敗！帳號已存在");
+//		}
 
 		if (members != null) {
 			// 更新會員資料
