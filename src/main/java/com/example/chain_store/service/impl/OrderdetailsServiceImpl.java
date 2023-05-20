@@ -210,4 +210,8 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		return "success";
 	}
 
+	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit) {
+		return orderdetailsDao.findOrderdetailByUseraccountOrderByOrderTime(account, limit);
+	}
+
 }

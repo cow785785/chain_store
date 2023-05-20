@@ -1,6 +1,7 @@
 package com.example.chain_store.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,5 +46,12 @@ public class OrderdetailsController {
 	@PostMapping("get_orderdetails_by_useraccount")
 	public List<Orderdetails> getOrderdetailsByUseraccount(@RequestBody String useraccount) {
 		return orderdetailsService.getOrderdetailsByUserAccount(useraccount);
+	}
+	
+	@PostMapping("/get_orderdetails_by_useraccount_limit")
+	public List<Orderdetails> getOrderdetailsByUseraccountLimit(@RequestBody Map<String, Object> requestBody) {
+		String useraccount = (String) requestBody.get("useraccount");
+		int limit = (int) requestBody.get("limit");
+		return orderdetailsService.findOrderdetailByUseraccountOrderByOrderTime(useraccount, limit);
 	}
 }
