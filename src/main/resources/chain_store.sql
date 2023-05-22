@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `orderdetails` (
   `products_id` varchar(36) DEFAULT NULL,
   `useraccount` varchar(50) DEFAULT NULL,
   `product_code` varchar(20) DEFAULT NULL,
-  `product_price` decimal(10,2) DEFAULT NULL,
+  `total_price` decimal(10,2) DEFAULT NULL,
   `quantity` int DEFAULT NULL,
   `delivery_address` varchar(100) DEFAULT NULL,
   `order_status` varchar(50) DEFAULT NULL,

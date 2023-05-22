@@ -34,8 +34,6 @@ public class MembersResponse {
 	}
 	
 	
-	
-
 	public MembersResponse(String userAccount, String password, String userName, LocalDate birthDate, String address,
 			String phone, String message) {
 		this.userAccount = userAccount;

@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -12,9 +11,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.ValidationUtils;
 
 import com.example.chain_store.entity.Members;
 import com.example.chain_store.repository.MembersDao;
@@ -27,25 +24,26 @@ public class MemberServiceImpl implements MembersService {
 
 	@Autowired
 	private MembersDao membersDao;
-	//電話番号検査
-	//指定された形式に電話番号が一致するかどうかを検証します。
-	//電話番号がnullまたは空の文字列かどうかをチェックし、その場合はfalseを返します。
-	//正規表現"(09-\\d{8})|(886-9\\d{7})"を使用して、電話番号の形式を検証します。
-	//電話番号が数字のみで構成され、"09-xxxxxxxx"または"886-9xxxxxxx"という形式であることを仮定しています（xは数字を表します）。
-	//電話番号が形式の要件を満たしている場合はtrueを返し、そうでなければfalseを返します。
+
+	// �閰梁�璊
+	// ������耦撘�閰梁��������������釆������
+	// �閰梁���ull���蝛箝�������������������false��������
+	// 甇�閬”�"(09-\\d{8})|(886-9\\d{7})"��蝙����閰梁��敶Ｗ���釆������
+	// �閰梁���摮��瑽�����"09-xxxxxxxx"���"886-9xxxxxxx"����耦撘������赫摰��������摮�”�������
+	// �閰梁���耦撘閬辣�����������true�����������false��������
 	public boolean checkPhoneNumber(String phoneNumber) {
-		// 電話番号が空でないかを確認します。(檢查電話號碼是否為非空值)
+		// �閰梁���征������Ⅱ隤�����(瑼Ｘ�閰梯�Ⅳ�����征��)
 		if (phoneNumber == null || phoneNumber.isEmpty()) {
 			return false;
 		}
 
-		// 電話番号の形式が要件に適合しているかを正規表現を使用して検証します(使用正則表達式驗證電話號碼的格式是否符合要求)
-		// 電話番号が数字のみで構成され、長さが10桁であると仮定します。(這裡假設電話號碼只包含數字，長度為10位)
+		// �閰梁��敶Ｗ���辣����������迤閬”���蝙���璊釆�����(雿輻甇���”�����閰梯�Ⅳ��撘�蝚血����)
+		// �閰梁���摮��瑽��������10獢���隞桀������(�ㄐ��身�閰梯�Ⅳ����摮�摨衣10雿�)
 		String pattern = "(09-\\d{8})|(886-9\\d{7})";
 		return phoneNumber.matches(pattern);
 	}
 
-	// 誕生日検査(生日範圍驗證)
+	// 隤�璊(��蝭����)
 	public boolean checkBirthDay(LocalDate birthDate) {
 	    if (birthDate == null) {
 	        return false;
@@ -53,20 +51,20 @@ public class MemberServiceImpl implements MembersService {
 
 	    LocalDate currentDate = LocalDate.now();
 
-	    // 生日必須在有效範圍
+	    // ��敹�������
 	    if (birthDate.isAfter(currentDate)) {
 	        return false;
 	    }
 
-	    // 檢查生日格式是否符合要求
+	    // 瑼Ｘ���撘�蝚血����
 	    String pattern = "\\d{4}-\\d{2}-\\d{2}";
 	    String birthDateString = birthDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	    if (!birthDateString.matches(pattern)) {
 	        return false;
 	    }
-	    // 其他生日條件的檢查，例如最小或最大年齡
-	    LocalDate maximumValidDate = currentDate.minusYears(150); // 假設最大年齡為150歲
-	    LocalDate minimumValidDate = currentDate.minusYears(0); // 假设最小年齡為0歲
+	    // �隞�璇辣��炎�嚗���撠��憭批僑朣�
+	    LocalDate maximumValidDate = currentDate.minusYears(150); // ��身��憭批僑朣∠150甇�
+	    LocalDate minimumValidDate = currentDate.minusYears(0); // ��挽��撠僑朣∠0甇�
 
 	    if (birthDate.isBefore(maximumValidDate) || birthDate.isAfter(minimumValidDate)) {
 	        return false;
@@ -76,7 +74,7 @@ public class MemberServiceImpl implements MembersService {
 	}
 
 
-	// パスワードに大文字のアルファベットを含むことが要件とされます。(規範密碼必須有大寫字母)
+	// ������憭扳������������������辣��������(閬��Ⅳ敹��之撖怠���)
 	private boolean containsUppercase(String password) {
 		for (int i = 0; i < password.length(); i++) {
 			if (Character.isUpperCase(password.charAt(i))) {
@@ -88,30 +86,30 @@ public class MemberServiceImpl implements MembersService {
 
 	@Override
 	public MembersResponse addMember(MemberRequest memberRequest) {
-		// 檢查電話號碼是否有效
+		// 瑼Ｘ�閰梯�Ⅳ������
 		if (!checkPhoneNumber(memberRequest.getPhone())) {
-			return new MembersResponse("失敗!電話號碼格式不對");
+			return new MembersResponse("憭望��!�閰梯�Ⅳ�撘���");
 		}
 		if (memberRequest.getPhone() == null || memberRequest.getPhone().isEmpty()) {
-			return new MembersResponse("失敗！電話號碼不能為空");
+			return new MembersResponse("憭望��閰梯�Ⅳ銝�蝛�");
 		}
 
-		// 檢查生日是否有效
+		// 瑼Ｘ��������
 		if (!this.checkBirthDay(memberRequest.getBirthDate())) {
-			return new MembersResponse("失敗！生日無效或超出範圍");
+			return new MembersResponse("憭望��������蝭��");
 		}
 		if (memberRequest.getBirthDate() == null) {
-			return new MembersResponse("失敗！生日不能為空");
+			return new MembersResponse("憭望���銝�蝛�");
 		}
 
-//		 檢查帳號是否已經存在
+//		 瑼Ｘ撣唾��撌脩��
 		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (optionMember.isPresent()) {
-			return new MembersResponse("失敗！帳號已存在");
+			return new MembersResponse("憭望��董��歇摮");
 		}
 
 		if (!containsUppercase(memberRequest.getPassword())) {
-			return new MembersResponse("密碼必須包含一個大寫字母");
+			return new MembersResponse("撖Ⅳ敹��銝��之撖怠���");
 		}
 
 		if (memberRequest.getPhone() == null || memberRequest.getPhone().isEmpty()
@@ -120,21 +118,21 @@ public class MemberServiceImpl implements MembersService {
 				|| memberRequest.getPassword().isEmpty() || memberRequest.getUsername() == null
 				|| memberRequest.getUsername().isEmpty() || memberRequest.getAddress() == null
 				|| memberRequest.getAddress().isEmpty()) {
-			return new MembersResponse("失敗！輸入值不能為空");
+			return new MembersResponse("憭望��撓��潔��蝛�");
 		}
 
 		Members members = new Members(memberRequest.getUseraccount(), memberRequest.getPassword(),
 				memberRequest.getUsername(), memberRequest.getBirthDate(), memberRequest.getAddress(),
 				memberRequest.getPhone(), memberRequest.getRegistrationTime());
 
-		// 換算時間格式
+		// �����撘�
 		long timestampMillis = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(timestampMillis);
-		// 加入資料庫前先加入換算好的時間
+		// ��鞈�澈�������末�����
 		Members savedMember = membersDao.save(members);
 		return new MembersResponse(memberRequest.getUseraccount(), memberRequest.getPassword(),
 				memberRequest.getUsername(), memberRequest.getBirthDate(), memberRequest.getAddress(),
-				memberRequest.getPhone(), "註冊成功");
+				memberRequest.getPhone(), "閮餃����");
 	}
 
 	@Override
@@ -145,18 +143,18 @@ public class MemberServiceImpl implements MembersService {
 	@Override
 	public MembersResponse readMember2(MemberRequest memberRequest) {
 		List<Members> members = membersDao.findAll();
-		return new MembersResponse(members, "查詢成功");
+		return new MembersResponse(members, "�閰Ｘ���");
 	}
 
 	@Override
 	public MembersResponse selectMember(MemberRequest memberRequest) {
 		if (!StringUtils.hasText(memberRequest.getUseraccount())) {
-			return new MembersResponse("失敗!帳號不得為空");
+			return new MembersResponse("憭望��!撣唾���蝛�");
 		}
 
 		Optional<Members> optional = membersDao.findByUseraccount(memberRequest.getUseraccount());
-		if (optional.isPresent()) {
-			return new MembersResponse("親!您的帳號不存在或是帳號錯誤");
+		if (!optional.isPresent()) {
+			return new MembersResponse("閬�!���董������撣唾�隤�");
 		}
 		Members members = optional.get();
 		return new MembersResponse(members.getUseraccount(),members.getPassword(),members.getUsername(),members.getBirthDate(),members.getAddress(),members.getPhone());
@@ -165,32 +163,32 @@ public class MemberServiceImpl implements MembersService {
 	@Override
 	public MembersResponse updateMember(MemberRequest memberRequest) {
 		Members members = membersDao.findByUseraccount(memberRequest.getUseraccount()).orElse(null);
-		// 檢查必填欄位
+		// 瑼Ｘ敹‵甈��
 		if (!StringUtils.hasText(memberRequest.getUseraccount()) || !StringUtils.hasText(memberRequest.getPassword())) {
-			return new MembersResponse("失敗！帳號和密碼為必填欄位");
+			return new MembersResponse("憭望��董����Ⅳ�敹‵甈��");
 		}
 
-		// 檢查日期格式
+		// 瑼Ｘ���撘�
 		if (memberRequest.getBirthDate() == null) {
-			return new MembersResponse("失敗！生日欄位為必填欄位");
+			return new MembersResponse("憭望���甈�敹‵甈��");
 		}
 		if(!checkBirthDay(memberRequest.getBirthDate())) {
-			return new MembersResponse(memberRequest.getPhone(),"失敗！生日格式無效");
+			return new MembersResponse(memberRequest.getPhone(),"憭望����撘���");
 		}
 
-		// 檢查電話
+		// 瑼Ｘ�閰�
 		if (!checkPhoneNumber(memberRequest.getPhone())) {
-			return new MembersResponse(memberRequest.getPhone(),"失敗！電話號碼格式無效");
+			return new MembersResponse(memberRequest.getPhone(),"憭望��閰梯�Ⅳ�撘���");
 		}
 
-		// 檢查帳號是否已經存在
+		// 瑼Ｘ撣唾��撌脩��
 		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (!optionMember.isPresent()) {
-			return new MembersResponse(memberRequest.getUseraccount(),"失敗！帳號不存在");
+			return new MembersResponse(memberRequest.getUseraccount(),"憭望��董����");
 		}
 
 		if (members != null) {
-			// 更新會員資料
+			// ����鞈��
 			members.setUseraccount(memberRequest.getUseraccount());
 			members.setPassword(memberRequest.getPassword());
 			members.setUsername(memberRequest.getUsername());
@@ -198,49 +196,45 @@ public class MemberServiceImpl implements MembersService {
 			members.setAddress(memberRequest.getAddress());
 			members.setPhone(memberRequest.getPhone());
 		} else {
-			return new MembersResponse(memberRequest.getUseraccount(),"找不到該會員，更新失敗");
+			return new MembersResponse(memberRequest.getUseraccount(),"�銝閰脫�嚗�憭望��");
 		}
 
 		Members updatedMember = membersDao.save(members);
 		return new MembersResponse(updatedMember.getUseraccount(), updatedMember.getPassword(),
 				updatedMember.getUsername(), updatedMember.getBirthDate(), updatedMember.getAddress(),
-				updatedMember.getPhone(),"更新成功");
+				updatedMember.getPhone(), "������");
 	}
 
 	@Override
 	public MembersResponse deleteMember(MemberRequest memberRequest) {
 		if (memberRequest.getUseraccount() == null) {
-			return new MembersResponse("帳號不得為空");
+			return new MembersResponse("撣唾���蝛�");
 		}
 
-		// 檢查帳號是否存在
+		// 瑼Ｘ撣唾��摮
 		Optional<Members> optionalStudent = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (!optionalStudent.isPresent()) {
-			return new MembersResponse(memberRequest.getUseraccount(),"帳號不存在");
+			return new MembersResponse(memberRequest.getUseraccount(),"撣唾���");
 		}
-		// 刪除帳號
+		// ��撣唾��
 		Members members = optionalStudent.get();
 		membersDao.delete(members);
 
-		return new MembersResponse(memberRequest.getUseraccount(),"刪除成功");
+		return new MembersResponse(memberRequest.getUseraccount(),"������");
 	}
-	
-	
-	
-	//登錄用API
+
 	@Override
 	public MembersResponse loginMember(MemberRequest memberRequest) {
 		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
-	    if (optionalMember.isPresent()) {
-	        Members member = optionalMember.get();
-	        if (!member.getPassword().equals(memberRequest.getPassword())) {
-	        	return new MembersResponse("帳號密碼驗證失敗");
-	        } 
-	    
-	}else {
-		return new MembersResponse("帳號密碼驗證失敗");
-	}
-	    return new MembersResponse(optionalMember.get().getUsername(),"登錄成功");
+		if (!optionalMember.isPresent()) {
+			return new MembersResponse("撣唾��Ⅳ撽�仃���");
+		}
+		Members member = optionalMember.get();
+		if (!member.getPassword().equals(memberRequest.getPassword())) {
+			return new MembersResponse("撣唾��Ⅳ撽�仃���");
+		}
+
+		return new MembersResponse(member.getUsername(), "������");
 	}
 
 }

@@ -7,17 +7,18 @@ import com.example.chain_store.vo.MemberRequest;
 import com.example.chain_store.vo.MembersResponse;
 
 public interface MembersService {
-	public MembersResponse addMember(MemberRequest memberRequest);//新增會員
+	public MembersResponse addMember(MemberRequest memberRequest);//嚙編嚙磕嚙罵嚙踝蕭
 	
-	public List<Members> readMember();//查詢會員
+	public List<Members> readMember();//嚙範嚙賠會嚙踝蕭
 	
 	public MembersResponse readMember2(MemberRequest memberRequest);//查詢會員
 	
-	public MembersResponse selectMember(MemberRequest memberRequest);//用帳號或ID查詢會員
+	public MembersResponse selectMember(MemberRequest memberRequest);//嚙諄帳嚙踝蕭嚙踝蕭ID嚙範嚙賠會嚙踝蕭
 	
-	public MembersResponse updateMember(MemberRequest memberRequest);//更新會員
+	public MembersResponse updateMember(MemberRequest memberRequest);//嚙踝蕭s嚙罵嚙踝蕭
 	
 	public MembersResponse deleteMember(MemberRequest memberRequest);//刪除會員
 	
 	public MembersResponse loginMember(MemberRequest memberRequest);//登錄會員
+
 }
