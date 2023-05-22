@@ -11,7 +11,7 @@ public interface MembersService {
 	
 	public List<Members> readMember();//琩高穦
 	
-	public MembersResponse readMember(MemberRequest memberRequest);//琩高穦
+	public MembersResponse readMember2(MemberRequest memberRequest);//琩高穦
 	
 	public MembersResponse selectMember(MemberRequest memberRequest);//ノ眀腹┪ID琩高穦
 	

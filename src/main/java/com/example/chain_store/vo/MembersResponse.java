@@ -1,6 +1,7 @@
 package com.example.chain_store.vo;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class MembersResponse {
 
 	private String userName;
 
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	private String address;
 
@@ -35,7 +36,7 @@ public class MembersResponse {
 	
 	
 
-	public MembersResponse(String userAccount, String password, String userName, Date birthDate, String address,
+	public MembersResponse(String userAccount, String password, String userName, LocalDate birthDate, String address,
 			String phone, String message) {
 		this.userAccount = userAccount;
 		this.password = password;
@@ -60,7 +61,7 @@ public class MembersResponse {
 //		this.message = message;
 //	}
 
-	public MembersResponse(String message,String userAccount, String userName, Date birthDate, String address, String phone) {
+	public MembersResponse(String message,String userAccount, String userName, LocalDate birthDate, String address, String phone) {
 		this.message = message;
 		this.userAccount = userAccount;
 		this.userName = userName;
@@ -87,7 +88,7 @@ public class MembersResponse {
 	
 	
 
-	public MembersResponse(String password, String userName, Date birthDate, String address, String phone,
+	public MembersResponse(String password, String userName, LocalDate birthDate, String address, String phone,
 			String message) {
 		super();
 		this.password = password;
@@ -143,11 +144,11 @@ public class MembersResponse {
 		this.userName = userName;
 	}
 
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 

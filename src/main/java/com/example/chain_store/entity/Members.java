@@ -2,6 +2,7 @@ package com.example.chain_store.entity;
 
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class Members {
 	private String username;
 
 	@Column(name = "birthdate")
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	@Column(name = "address")
 	private String address;
@@ -51,7 +52,7 @@ public class Members {
 	
 	
 
-	public Members(String useraccount, String password, String username, Date birthDate, String address, String phone,
+	public Members(String useraccount, String password, String username, LocalDate birthDate, String address, String phone,
 			Timestamp registrationTime) {
 		super();
 		this.useraccount = useraccount;
@@ -65,7 +66,7 @@ public class Members {
 
 
 
-	public Members(UUID id, String useraccount, String password, String username, Date birthDate, String address,
+	public Members(UUID id, String useraccount, String password, String username, LocalDate birthDate, String address,
 			String phone, Timestamp  registrationTime) {
 		this.id = id;
 		this.useraccount = useraccount;
@@ -112,11 +113,11 @@ public class Members {
 		this.username = username;
 	}
 
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 

@@ -1,6 +1,7 @@
 package com.example.chain_store.vo;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class MemberRequest {
@@ -14,7 +15,7 @@ public class MemberRequest {
 	private String username;
 
 	
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	
 	private String address;
@@ -57,12 +58,12 @@ public class MemberRequest {
 	}
 
 
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 

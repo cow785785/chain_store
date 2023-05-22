@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,33 +46,35 @@ public class MemberServiceImpl implements MembersService {
 	}
 
 	// 誕生日検査(生日範圍驗證)
-	public boolean checkBirthDay(Date birthDate) {
-		if (birthDate == null) {
-			return false;
-		}
+	public boolean checkBirthDay(LocalDate birthDate) {
+	    if (birthDate == null) {
+	        return false;
+	    }
 
-		LocalDate currentDate = LocalDate.now();
+	    LocalDate currentDate = LocalDate.now();
 
-		// 將 java.util.Date 轉換為 java.time.LocalDate
-		Instant instant = birthDate.toInstant();
-		ZoneId zone = ZoneId.systemDefault();
-		LocalDate birthLocalDate = instant.atZone(zone).toLocalDate();
+	    // 生日必須在有效範圍
+	    if (birthDate.isAfter(currentDate)) {
+	        return false;
+	    }
 
-		// 生年月日が有効な範囲内にあるかを検査する(検査生日是否在有效範圍內)
-		if (birthLocalDate.isAfter(currentDate)) {
-			return false;
-		}
+	    // 檢查生日格式是否符合要求
+	    String pattern = "\\d{4}-\\d{2}-\\d{2}";
+	    String birthDateString = birthDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	    if (!birthDateString.matches(pattern)) {
+	        return false;
+	    }
+	    // 其他生日條件的檢查，例如最小或最大年齡
+	    LocalDate maximumValidDate = currentDate.minusYears(150); // 假設最大年齡為150歲
+	    LocalDate minimumValidDate = currentDate.minusYears(0); // 假设最小年齡為0歲
 
-		// 他の誕生日条件、例えば最小または最大年齢をチェックします。(檢查其他生日條件，例如最小或最大年齡)
-		LocalDate maximumValidDate = currentDate.minusYears(150); // 最小年齢を150歳と仮定します。(假設最大年齡為150歲)
-		LocalDate minimumValidDate = currentDate.minusYears(0); // 最小年齢を0歳と仮定します。(假設最小年齡為0歲)
+	    if (birthDate.isBefore(maximumValidDate) || birthDate.isAfter(minimumValidDate)) {
+	        return false;
+	    }
 
-		if (birthLocalDate.isBefore(maximumValidDate) || birthLocalDate.isAfter(minimumValidDate)) {
-			return false;
-		}
-
-		return true;
+	    return true;
 	}
+
 
 	// パスワードに大文字のアルファベットを含むことが要件とされます。(規範密碼必須有大寫字母)
 	private boolean containsUppercase(String password) {
@@ -128,7 +131,6 @@ public class MemberServiceImpl implements MembersService {
 		long timestampMillis = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(timestampMillis);
 		// 加入資料庫前先加入換算好的時間
-		members.setRegistrationTime(timestamp);
 		Members savedMember = membersDao.save(members);
 		return new MembersResponse(memberRequest.getUseraccount(), memberRequest.getPassword(),
 				memberRequest.getUsername(), memberRequest.getBirthDate(), memberRequest.getAddress(),
@@ -141,7 +143,7 @@ public class MemberServiceImpl implements MembersService {
 	}
 
 	@Override
-	public MembersResponse readMember(MemberRequest memberRequest) {
+	public MembersResponse readMember2(MemberRequest memberRequest) {
 		List<Members> members = membersDao.findAll();
 		return new MembersResponse(members, "查詢成功");
 	}
