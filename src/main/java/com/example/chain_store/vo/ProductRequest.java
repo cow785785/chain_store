@@ -10,6 +10,8 @@ public class ProductRequest {
 
 	private String productName;
 
+	private String searchName;
+
 	private String category;
 
 	public Product getProduct() {
@@ -42,6 +44,14 @@ public class ProductRequest {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getSearchName() {
+		return searchName;
+	}
+
+	public void setSearchName(String searchName) {
+		this.searchName = searchName;
 	}
 
 }

@@ -17,7 +17,7 @@ class ChainStoreApplicationTests {
 
 	@Test
 	void daoTest() {
-		System.out.println(productDao.findByProductCode("a"));
+		System.out.println(productDao.findByNameOrCategory("Lunch").size());
 
 	}
 

@@ -199,4 +199,14 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.findAll();
 	}
 
+//	用分類or名字找商品
+	@Override
+	public ProductResponse findProductByNameOrCategory(ProductRequest req) {
+		List<Product> searchList = productDao.findByNameOrCategory(req.getSearchName());
+		if (searchList.size() == 0) {
+			return new ProductResponse("找無此商品");
+		}
+		return new ProductResponse(searchList);
+
+	}
 }
