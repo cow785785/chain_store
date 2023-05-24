@@ -56,4 +56,9 @@ public class ProductController {
 		return productService.findAllProduct();
 	}
 
+	@PostMapping("/find_product_by_name_or_category")
+	public ProductResponse findProductByNameOrCategory(@RequestBody ProductRequest req) {
+		return productService.findProductByNameOrCategory(req);
+	}
+
 }
