@@ -9,7 +9,7 @@ import com.example.chain_store.entity.Orderdetails;
 
 public interface OrderdetailsDao extends JpaRepository<Orderdetails, String> {
 
-	public List<Orderdetails> findByUseraccount(String useraccount);
+	public List<Orderdetails> findByUseraccountOrderByOrderTimeDesc(String useraccount);
 
 	public Orderdetails findByOrderNumber(String orderNumber);
 

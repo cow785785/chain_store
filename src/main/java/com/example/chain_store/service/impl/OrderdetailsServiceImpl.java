@@ -181,7 +181,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 
 	@Override
 	public List<Orderdetails> getOrderdetailsByUserAccount(String useraccount) {
-		return orderdetailsDao.findByUseraccount(useraccount);
+		return orderdetailsDao.findByUseraccountOrderByOrderTimeDesc(useraccount);
 	}
 
 	private String checkOrderdetails(Orderdetails order) {
@@ -217,9 +217,30 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit) {
 		return orderdetailsDao.findOrderdetailByUseraccountAndNotCartOrderByOrderTime(account, limit);
 	}
-	
-	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus){
+
+	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus) {
 		return orderdetailsDao.findByUseraccountAndOrderStatus(useraccount, orderStatus);
+	}
+
+	@Override
+	public OrderdetailsResponse refreshCart(OrderdetailsRequest request) {
+		if (request == null) {
+			return new OrderdetailsResponse("請檢查request內容");
+		}
+		List<Orderdetails> dbList = request.getOrderList();
+		List<Orderdetails> newList = request.getNewList();
+
+		try {
+			if (!CollectionUtils.isEmpty(dbList)) {//讓dbList進行delOrder方法
+				this.delOrder(new OrderdetailsRequest(dbList));
+			}
+			if (!CollectionUtils.isEmpty(newList)) {//讓newList進行newOrder方法
+				this.newOrder(new OrderdetailsRequest(newList));
+			}
+			return new OrderdetailsResponse("交換成功");
+		} catch (Exception e) {
+			return new OrderdetailsResponse("發生無法預期的錯誤");
+		}
 	}
 
 }

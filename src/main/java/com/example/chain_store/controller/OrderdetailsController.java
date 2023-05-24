@@ -62,4 +62,8 @@ public class OrderdetailsController {
 		return orderdetailsService.findByUseraccountAndOrderStatus(useraccount, orderStatus);
 	}
 
+	@PostMapping("/change_order")
+	public OrderdetailsResponse refreshCart(@RequestBody OrderdetailsRequest request) {
+		return orderdetailsService.refreshCart(request);
+	}
 }

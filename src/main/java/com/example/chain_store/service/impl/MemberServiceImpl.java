@@ -234,7 +234,7 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("撣唾��Ⅳ撽�仃���");
 		}
 
-		return new MembersResponse(member.getUsername(), "������");
+		return new MembersResponse(member.getUsername(), "登錄成功");
 	}
 
 }

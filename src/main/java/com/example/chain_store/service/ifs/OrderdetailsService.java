@@ -20,4 +20,6 @@ public interface OrderdetailsService {
 	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit);
 	
 	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus);
+
+	public OrderdetailsResponse refreshCart(OrderdetailsRequest request);
 }
