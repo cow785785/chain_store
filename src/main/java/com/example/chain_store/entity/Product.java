@@ -32,7 +32,7 @@ public class Product {
 	private Integer price;
 
 	@Column(name = "product_img")
-	private byte[] productImg;
+	private String productImg;
 
 	@Column(name = "product_info")
 	private String productInfo;
@@ -56,7 +56,7 @@ public class Product {
 
 
 	public Product(UUID id, String productCode, String productName, Integer price,
-			byte[] productImg, String productInfo, String productDescribe,
+			String productImg, String productInfo, String productDescribe,
 			String category) {
 		super();
 		this.id = id;
@@ -109,11 +109,11 @@ public class Product {
 		this.category = category;
 	}
 
-	public byte[] getProductImg() {
+	public String getProductImg() {
 		return productImg;
 	}
 
-	public void setProductImg(byte[] productImg) {
+	public void setProductImg(String productImg) {
 		this.productImg = productImg;
 	}
 
