@@ -151,13 +151,20 @@ public class MemberServiceImpl implements MembersService {
 		if (!StringUtils.hasText(memberRequest.getUseraccount())) {
 			return new MembersResponse("失敗!帳號不得為空");
 		}
+		
+		String keyword = memberRequest.getUseraccount(); // 關鍵字為使用者輸入的帳號
+	    List<Members> matchingMembers = membersDao.findByUseraccountContaining(keyword);
+
+	    if (matchingMembers.isEmpty()) {
+	        return new MembersResponse("找不到符合搜尋關鍵字的會員");
+	    }
 
 		Optional<Members> optional = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (!optional.isPresent()) {
 			return new MembersResponse("親!您的帳號不存在或是帳號錯誤");
 		}
 		Members members = optional.get();
-		return new MembersResponse(members.getUseraccount(),members.getPassword(),members.getUsername(),members.getBirthDate(),members.getAddress(),members.getPhone());
+		return new MembersResponse(members.getUseraccount(),members.getPassword(),members.getUsername(),members.getBirthDate(),members.getAddress(),members.getPhone(),"OK");
 	}
 
 	@Override
@@ -179,6 +186,10 @@ public class MemberServiceImpl implements MembersService {
 		// 檢查電話
 		if (!checkPhoneNumber(memberRequest.getPhone())) {
 			return new MembersResponse(memberRequest.getPhone(),"失敗！電話號碼格式無效");
+		}
+		
+		if (!containsUppercase(memberRequest.getPassword())) {
+			return new MembersResponse("密碼必須包含一個大寫字母");
 		}
 
 		// 檢查帳號是否已經存在
@@ -239,4 +250,18 @@ public class MemberServiceImpl implements MembersService {
 		return new MembersResponse(member.getUsername(), "登錄成功");
 	}
 
+	
+	@Override
+	public MembersResponse checkAccountExist(MemberRequest memberRequest) {
+	    if (!StringUtils.hasText(memberRequest.getUseraccount())) {
+	        return new MembersResponse("帳號不得為空");
+	    }
+
+	    Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+	    if (optionalMember.isPresent()) {
+	        return new MembersResponse("帳號已存在");
+	    } else {
+	        return new MembersResponse("帳號可使用");
+	    }
+	}
 }

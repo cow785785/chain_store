@@ -116,6 +116,7 @@ public class MembersResponse {
 		this.userName = userName;
 		this.message = message;
 	}
+		
 
 
 	public String getUserAccount() {

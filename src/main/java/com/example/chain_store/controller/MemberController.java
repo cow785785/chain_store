@@ -58,9 +58,13 @@ public class MemberController {
 	}
 	
 	@PostMapping("/loginMember")
-
 	public MembersResponse loginMember(@RequestBody MemberRequest memberRequest) {
 		return membersService.loginMember(memberRequest);
+	}
+	
+	@PostMapping("/checkAccountExist")
+	public MembersResponse checkAccountExist(@RequestBody MemberRequest memberRequest) {
+		return membersService.checkAccountExist(memberRequest);
 	}
 
 }
