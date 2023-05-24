@@ -13,6 +13,9 @@ public interface OrderdetailsDao extends JpaRepository<Orderdetails, String> {
 
 	public Orderdetails findByOrderNumber(String orderNumber);
 
-	@Query(value = "SELECT * FROM orderdetails a WHERE a.useraccount = ?1 ORDER BY a.order_time limit ?2", nativeQuery = true)
-	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit);
+	@Query(value = "SELECT * FROM orderdetails a WHERE a.useraccount = ?1 and a.order_status != 'カート入り'ORDER BY a.order_time DESC limit ?2", nativeQuery = true)
+	public List<Orderdetails> findOrderdetailByUseraccountAndNotCartOrderByOrderTime(String account, int limit);
+
+	public List<Orderdetails> findByUseraccountAndOrderStatus(String account, String orderStatus);
+
 }

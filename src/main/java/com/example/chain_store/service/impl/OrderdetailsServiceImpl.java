@@ -84,8 +84,8 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				}
 				order.setProductsId(product);
 
-				// 設定初始訂單狀態
-				order.setOrderStatus("收到訂單");
+//				// 設定初始訂單狀態
+//				order.setOrderStatus("收到訂單");
 				// 設定訂單時間，將當前系統時間寫入
 				long currentTime = System.currentTimeMillis();
 				order.setOrderTime(new Timestamp(currentTime));
@@ -193,10 +193,14 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		if (!StringUtils.hasText(order.getProductCode())) {
 			return "無法取得product_code";
 		}
+
+		if (!StringUtils.hasText(order.getOrderStatus())) {
+			return "無法取得order_status";
+		}
 		// 檢查商品金額是否大於0
 		// BigDecimal.ZERO為BigDecimal類別的0
 		// 判斷式類似於(productPrice - 0)<=0，其中(productPrice - 0)為BigDecimal類別
-		if (order.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
+		if (order.getTotalPrice() == null || order.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
 			return "total_price異常";
 		}
 		// 判斷數量quantity
@@ -211,7 +215,11 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 	}
 
 	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit) {
-		return orderdetailsDao.findOrderdetailByUseraccountOrderByOrderTime(account, limit);
+		return orderdetailsDao.findOrderdetailByUseraccountAndNotCartOrderByOrderTime(account, limit);
+	}
+	
+	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus){
+		return orderdetailsDao.findByUseraccountAndOrderStatus(useraccount, orderStatus);
 	}
 
 }

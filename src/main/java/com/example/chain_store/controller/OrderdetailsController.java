@@ -54,4 +54,12 @@ public class OrderdetailsController {
 		int limit = (int) requestBody.get("limit");
 		return orderdetailsService.findOrderdetailByUseraccountOrderByOrderTime(useraccount, limit);
 	}
+
+	@PostMapping("/get_order_by_useraccount_and_order_status")
+	public List<Orderdetails> findByUseraccountAndOrderStatus(@RequestBody Map<String, Object> requestBody){
+		String useraccount = (String) requestBody.get("useraccount");
+		String orderStatus = (String) requestBody.get("orderStatus");
+		return orderdetailsService.findByUseraccountAndOrderStatus(useraccount, orderStatus);
+	}
+
 }

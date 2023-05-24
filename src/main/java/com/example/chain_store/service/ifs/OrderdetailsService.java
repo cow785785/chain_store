@@ -18,5 +18,6 @@ public interface OrderdetailsService {
 	public List<Orderdetails> getOrderdetailsByUserAccount(String useraccount);
 	
 	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit);
-
+	
+	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus);
 }
