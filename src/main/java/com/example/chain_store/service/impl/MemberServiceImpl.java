@@ -76,12 +76,25 @@ public class MemberServiceImpl implements MembersService {
 
 	// パスワードに大文字のアルファベットを含むことが要件とされます。(規範密碼必須有大寫字母)
 	private boolean containsUppercase(String password) {
+		//少なくとも8桁必要です
+		if (password.length() < 8) {
+	        return false;
+	    }
 		for (int i = 0; i < password.length(); i++) {
 			if (Character.isUpperCase(password.charAt(i))) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private boolean isCheckAddressFormat(String address) {
+		if (address == null || address.isEmpty()) {
+			return false;
+		}
+		
+	    String pattern = "[\\u4e00-\\u9fa5]{2}[市省][\\u4e00-\\u9fa5]{2}[路街巷]";
+	    return address.matches(pattern);
 	}
 
 	@Override
@@ -100,6 +113,10 @@ public class MemberServiceImpl implements MembersService {
 		}
 		if (memberRequest.getBirthDate() == null) {
 			return new MembersResponse("失敗！生日不能為空");
+		}
+		
+		if(!isCheckAddressFormat(memberRequest.getAddress())) {
+			return new MembersResponse("失敗！地址無效或不符合規範");
 		}
 
 		//檢查帳號是否已經存在
@@ -191,6 +208,10 @@ public class MemberServiceImpl implements MembersService {
 		if (!containsUppercase(memberRequest.getPassword())) {
 			return new MembersResponse("密碼必須包含一個大寫字母");
 		}
+		
+		if(!isCheckAddressFormat(memberRequest.getAddress())) {
+			return new MembersResponse("失敗！地址無效或不符合規範");
+		}
 
 		// 檢查帳號是否已經存在
 		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
@@ -264,4 +285,24 @@ public class MemberServiceImpl implements MembersService {
 	        return new MembersResponse("帳號可使用");
 	    }
 	}
+
+	@Override
+	public MembersResponse updatePassword(MemberRequest memberRequest) {
+		if (!StringUtils.hasText(memberRequest.getUseraccount())) {
+	        return new MembersResponse("帳號不得為空");
+	    }
+		 Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		    if (optionalMember.isPresent()) {
+		        Members member = optionalMember.get();
+		        member.setPassword(memberRequest.getPassword()); // 更新密码
+
+		        membersDao.save(member);
+
+		        return new MembersResponse(member.getUseraccount(),member.getPassword(), "密碼已更新");
+		    } else {
+		        return new MembersResponse(memberRequest.getUseraccount(), "帳號不存在");
+		    }
+	}
+	
+	
 }

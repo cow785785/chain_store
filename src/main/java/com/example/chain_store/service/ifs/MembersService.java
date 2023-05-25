@@ -23,6 +23,8 @@ public interface MembersService {
 	
 	public MembersResponse checkAccountExist(MemberRequest memberRequest);
 	
+	public MembersResponse updatePassword(MemberRequest memberRequest);//修改密碼
+	
 
 
 }

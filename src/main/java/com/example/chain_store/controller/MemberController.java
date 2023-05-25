@@ -66,5 +66,10 @@ public class MemberController {
 	public MembersResponse checkAccountExist(@RequestBody MemberRequest memberRequest) {
 		return membersService.checkAccountExist(memberRequest);
 	}
+	
+	@PostMapping("/updatePassword")
+	public MembersResponse updatePassword(@RequestBody MemberRequest memberRequest) {
+		return membersService.updatePassword(memberRequest);
+	}
 
 }
