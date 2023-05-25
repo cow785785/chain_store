@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.chain_store.entity.Product;
 import com.example.chain_store.service.ifs.ProductService;
-import com.example.chain_store.vo.ProductRequest;
-import com.example.chain_store.vo.ProductResponse;
+import com.example.chain_store.vo.request.ProductRequest;
+import com.example.chain_store.vo.response.ProductResponse;
 
 @CrossOrigin
 @RestController

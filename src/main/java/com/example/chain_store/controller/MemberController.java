@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.chain_store.entity.Members;
 import com.example.chain_store.repository.MembersDao;
 import com.example.chain_store.service.ifs.MembersService;
-import com.example.chain_store.vo.MemberRequest;
-import com.example.chain_store.vo.MembersResponse;
+import com.example.chain_store.vo.request.MemberRequest;
+import com.example.chain_store.vo.response.MembersResponse;
 
 @CrossOrigin
 @RestController

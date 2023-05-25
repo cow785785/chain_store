@@ -1,4 +1,4 @@
-package com.example.chain_store.vo;
+package com.example.chain_store.vo.request;
 
 import com.example.chain_store.entity.Product;
 

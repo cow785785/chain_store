@@ -9,8 +9,8 @@ import org.springframework.util.StringUtils;
 import com.example.chain_store.entity.Product;
 import com.example.chain_store.repository.ProductDao;
 import com.example.chain_store.service.ifs.ProductService;
-import com.example.chain_store.vo.ProductRequest;
-import com.example.chain_store.vo.ProductResponse;
+import com.example.chain_store.vo.request.ProductRequest;
+import com.example.chain_store.vo.response.ProductResponse;
 
 @Service
 public class ProductServiceImpl implements ProductService {

@@ -1,4 +1,4 @@
-package com.example.chain_store.vo;
+package com.example.chain_store.vo.response;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;

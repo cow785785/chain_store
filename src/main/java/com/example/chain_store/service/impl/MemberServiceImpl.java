@@ -18,8 +18,8 @@ import org.springframework.util.StringUtils;
 import com.example.chain_store.entity.Members;
 import com.example.chain_store.repository.MembersDao;
 import com.example.chain_store.service.ifs.MembersService;
-import com.example.chain_store.vo.MemberRequest;
-import com.example.chain_store.vo.MembersResponse;
+import com.example.chain_store.vo.request.MemberRequest;
+import com.example.chain_store.vo.response.MembersResponse;
 
 @Service
 public class MemberServiceImpl implements MembersService {

@@ -3,8 +3,8 @@ package com.example.chain_store.service.ifs;
 import java.util.List;
 
 import com.example.chain_store.entity.Members;
-import com.example.chain_store.vo.MemberRequest;
-import com.example.chain_store.vo.MembersResponse;
+import com.example.chain_store.vo.request.MemberRequest;
+import com.example.chain_store.vo.response.MembersResponse;
 
 public interface MembersService {
 	public MembersResponse addMember(MemberRequest memberRequest);//�s�W�|��
