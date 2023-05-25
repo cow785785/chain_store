@@ -101,6 +101,13 @@ public class MembersResponse {
 
 
 
+	public MembersResponse(String userAccount, String password, String message) {
+		this.userAccount = userAccount;
+		this.password = password;
+		this.message = message;
+	}
+
+
 	public MembersResponse(String message) {
 		this.message = message;
 	}
@@ -116,6 +123,7 @@ public class MembersResponse {
 		this.userName = userName;
 		this.message = message;
 	}
+		
 
 
 	public String getUserAccount() {

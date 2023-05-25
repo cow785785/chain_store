@@ -11,14 +11,20 @@ public interface MembersService {
 	
 	public List<Members> readMember();//ï¿½dï¿½ß·|ï¿½ï¿½
 	
-	public MembersResponse readMember2(MemberRequest memberRequest);//¬d¸ß·|­û
+	public MembersResponse readMember2(MemberRequest memberRequest);//ï¿½dï¿½ß·|ï¿½ï¿½
 	
 	public MembersResponse selectMember(MemberRequest memberRequest);//ï¿½Î±bï¿½ï¿½ï¿½ï¿½IDï¿½dï¿½ß·|ï¿½ï¿½
 	
 	public MembersResponse updateMember(MemberRequest memberRequest);//ï¿½ï¿½sï¿½|ï¿½ï¿½
 	
-	public MembersResponse deleteMember(MemberRequest memberRequest);//§R°£·|­û
+	public MembersResponse deleteMember(MemberRequest memberRequest);//ï¿½Rï¿½ï¿½ï¿½|ï¿½ï¿½
 	
-	public MembersResponse loginMember(MemberRequest memberRequest);//µn¿ý·|­û
+	public MembersResponse loginMember(MemberRequest memberRequest);//ï¿½nï¿½ï¿½ï¿½|ï¿½ï¿½
+	
+	public MembersResponse checkAccountExist(MemberRequest memberRequest);
+	
+	public MembersResponse updatePassword(MemberRequest memberRequest);//ä¿®æ”¹å¯†ç¢¼
+	
+
 
 }
