@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.regex.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,15 +89,19 @@ public class MemberServiceImpl implements MembersService {
 		}
 		return false;
 	}
-	
+
 	private boolean isCheckAddressFormat(String address) {
-		if (address == null || address.isEmpty()) {
-			return false;
-		}
-		
-	    String pattern = "[\\u4e00-\\u9fa5]{2}[市省][\\u4e00-\\u9fa5]{2}[路街巷]";
-	    return address.matches(pattern);
+	    if (address == null || address.isEmpty()) {
+	        return false;
+	    }
+	    
+	    String pattern = "[\\u4e00-\\u9fa5]{2}[市|縣][\\u4e00-\\u9fa5]{2,9}(?:[路|街|巷].*)?";
+	    Pattern regex = Pattern.compile(pattern);
+	    Matcher matcher = regex.matcher(address);
+	    
+	    return matcher.matches();
 	}
+
 
 	@Override
 	public MembersResponse addMember(MemberRequest memberRequest) {
