@@ -72,7 +72,8 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				return new OrderdetailsResponse(checkResult);
 			} else {// 開始寫入初始資料
 
-				Optional<Members> memberOP = membersDao.findByUseraccount(order.getUseraccount());
+				Optional<Members> memberOP = membersDao
+						.findByUseraccount(order.getUseraccount());
 				if (!memberOP.isPresent()) {
 					return new OrderdetailsResponse(order.getUseraccount() + "不存在。");
 				}
@@ -95,7 +96,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("MMdd");
 				String date4 = dateFormat.format(currentTime);// 月份日期4碼
 				String account4 = order.getUseraccount().substring(0, 4);// 帳號前4碼
-				String product4 = order.getProductCode().substring(0, 4);// 商品號前4碼
+				String product4 = order.getProductCode();// 商品號前4碼
 				// 訂單號:時間戳末6碼+月份日期4碼+帳號前4碼+商品號前4碼
 				String newNumber = time6 + date4 + account4 + product4;
 				// 設定訂單號
@@ -136,7 +137,8 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				orderdetail.setTotalPrice(order.getTotalPrice());
 				isUpdated = true;// 若有變動則變更
 			}
-			if (order.getQuantity() > 0 && order.getQuantity() != orderdetail.getQuantity()) {
+			if (order.getQuantity() > 0
+					&& order.getQuantity() != orderdetail.getQuantity()) {
 				orderdetail.setQuantity(order.getQuantity());
 				isUpdated = true;// 若有變動則變更數量
 			}
@@ -200,7 +202,8 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		// 檢查商品金額是否大於0
 		// BigDecimal.ZERO為BigDecimal類別的0
 		// 判斷式類似於(productPrice - 0)<=0，其中(productPrice - 0)為BigDecimal類別
-		if (order.getTotalPrice() == null || order.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
+		if (order.getTotalPrice() == null
+				|| order.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
 			return "total_price異常";
 		}
 		// 判斷數量quantity
@@ -214,11 +217,14 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		return "success";
 	}
 
-	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit) {
-		return orderdetailsDao.findOrderdetailByUseraccountAndNotCartOrderByOrderTime(account, limit);
+	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account,
+			int limit) {
+		return orderdetailsDao
+				.findOrderdetailByUseraccountAndNotCartOrderByOrderTime(account, limit);
 	}
 
-	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus) {
+	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount,
+			String orderStatus) {
 		return orderdetailsDao.findByUseraccountAndOrderStatus(useraccount, orderStatus);
 	}
 
@@ -231,10 +237,10 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		List<Orderdetails> newList = request.getNewList();
 
 		try {
-			if (!CollectionUtils.isEmpty(dbList)) {//讓dbList進行delOrder方法
+			if (!CollectionUtils.isEmpty(dbList)) {// 讓dbList進行delOrder方法
 				this.delOrder(new OrderdetailsRequest(dbList));
 			}
-			if (!CollectionUtils.isEmpty(newList)) {//讓newList進行newOrder方法
+			if (!CollectionUtils.isEmpty(newList)) {// 讓newList進行newOrder方法
 				this.newOrder(new OrderdetailsRequest(newList));
 			}
 			return new OrderdetailsResponse("交換成功");
