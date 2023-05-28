@@ -45,6 +45,14 @@ public class ProductServiceImpl implements ProductService {
 		if (product.getPrice() <= 0) {
 			return new ProductResponse("商品價格不得小於0!");
 		}
+//		價錢 	是否不為空
+		if (product.getInventory() == null) {
+			return new ProductResponse("請輸入庫存數量!");
+		}
+//		庫存		是否不小於0
+		if (product.getInventory() <= 0) {
+			return new ProductResponse("庫存數量不得小於0!");
+		}
 //		分類 	是否不為空
 		if (!StringUtils.hasText(product.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
@@ -116,6 +124,17 @@ public class ProductServiceImpl implements ProductService {
 			return new ProductResponse("商品價格不得小於0!");
 		} else {
 			updatedProduct.setPrice(reqProduct.getPrice());
+		}
+
+//		庫存 	是否不為空
+		if (reqProduct.getInventory() == null) {
+			return new ProductResponse("請輸入庫存數量!");
+		}
+//		庫存 	是否不小於0
+		if (reqProduct.getInventory() <= 0) {
+			return new ProductResponse("庫存數量不得小於0!");
+		} else {
+			updatedProduct.setInventory(reqProduct.getInventory());
 		}
 
 //		分類 	是否不為空
