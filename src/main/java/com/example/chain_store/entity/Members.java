@@ -1,10 +1,8 @@
 
 package com.example.chain_store.entity;
 
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -24,37 +22,34 @@ public class Members {
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id")
 	@Type(type = "org.hibernate.type.UUIDCharType")
-	private UUID  id;
-
+	private UUID id;
 	@Column(name = "useraccount")
 	private String useraccount;
-
 	@Column(name = "password")
 	private String password;
-
 	@Column(name = "username")
 	private String username;
-
 	@Column(name = "birthdate")
 	private LocalDate birthDate;
-
 	@Column(name = "address")
 	private String address;
-
 	@Column(name = "phone")
 	private String phone;
-
 	@Column(name = "registration_time")
 	private Timestamp registrationTime;
+	@Column(name = "status")
+	private boolean status;
+	@Column(name = "email")
+	private String email;
+	@Column(name = "point")
+	private int point;
 
 	public Members() {
 
 	}
-	
-	
 
-	public Members(String useraccount, String password, String username, LocalDate birthDate, String address, String phone,
-			Timestamp registrationTime) {
+	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
+			String phone, Timestamp registrationTime) {
 		super();
 		this.useraccount = useraccount;
 		this.password = password;
@@ -65,10 +60,8 @@ public class Members {
 		this.registrationTime = registrationTime;
 	}
 
-
-
 	public Members(UUID id, String useraccount, String password, String username, LocalDate birthDate, String address,
-			String phone, Timestamp  registrationTime) {
+			String phone, Timestamp registrationTime) {
 		this.id = id;
 		this.useraccount = useraccount;
 		this.password = password;
@@ -79,6 +72,22 @@ public class Members {
 		this.registrationTime = registrationTime;
 	}
 
+	public Members(UUID id, String useraccount, String password, String username, LocalDate birthDate, String address,
+			String phone, Timestamp registrationTime, boolean status, String email, int point) {
+		super();
+		this.id = id;
+		this.useraccount = useraccount;
+		this.password = password;
+		this.username = username;
+		this.birthDate = birthDate;
+		this.address = address;
+		this.phone = phone;
+		this.registrationTime = registrationTime;
+		this.status = status;
+		this.email = email;
+		this.point = point;
+	}
+
 	public UUID getId() {
 		return id;
 	}
@@ -86,7 +95,6 @@ public class Members {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-
 
 	public String getUseraccount() {
 		return useraccount;
@@ -103,8 +111,6 @@ public class Members {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	
 
 	public String getUsername() {
 		return username;
@@ -138,24 +144,18 @@ public class Members {
 		this.phone = phone;
 	}
 
-	public Timestamp  getRegistrationTime() {
+	public Timestamp getRegistrationTime() {
 		return registrationTime;
 	}
 
-	public void setRegistrationTime(Timestamp  registrationTime) {
+	public void setRegistrationTime(Timestamp registrationTime) {
 		this.registrationTime = registrationTime;
 	}
+
 	@Override
-    public String toString() {
-        return "Member{" +
-                "id='" + id + '\'' +
-                ", useraccount='" + useraccount + '\'' +
-                ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
-                ", birthdate=" + birthDate +
-                ", address='" + address + '\'' +
-                ", phone='" + phone + '\'' +
-                ", registrationTime=" + registrationTime +
-                '}';
-    }
+	public String toString() {
+		return "Member{" + "id='" + id + '\'' + ", useraccount='" + useraccount + '\'' + ", password='" + password
+				+ '\'' + ", username='" + username + '\'' + ", birthdate=" + birthDate + ", address='" + address + '\''
+				+ ", phone='" + phone + '\'' + ", registrationTime=" + registrationTime + '}';
+	}
 }

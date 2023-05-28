@@ -12,12 +12,20 @@ public class OrderdetailsResponse {
 	@JsonProperty("order_list")
 	private List<Orderdetails> orderList;
 
+	private String code;
+
 	private String message;
 
 	public OrderdetailsResponse() {
 	}
 
 	public OrderdetailsResponse(String message) {
+		this.message = message;
+	}
+
+	public OrderdetailsResponse(String code, String message) {
+		super();
+		this.code = code;
 		this.message = message;
 	}
 
@@ -40,6 +48,14 @@ public class OrderdetailsResponse {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

@@ -44,16 +44,11 @@ public class Product {
 	private String category;
 
 	public Product() {
-		super();
 	}
-	
-	
 
 	public Product(String productCode) {
 		this.productCode = productCode;
 	}
-
-
 
 	public Product(UUID id, String productCode, String productName, Integer price,
 			String productImg, String productInfo, String productDescribe,
