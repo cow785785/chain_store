@@ -1,5 +1,8 @@
 package com.example.chain_store.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +72,11 @@ public class ProductServiceImpl implements ProductService {
 			return new ProductResponse("請輸入商品詳細描述!");
 		}
 		productDao.save(product);
+
+		// 測試圖片
+//		String path = "C:\Users\Lenovo\Desktop\pic";
+//		toImage(product.getProductImg(), "C://Users//Lenovo//Desktop//pic//test.jpg");
+
 		return new ProductResponse("新增商品成功!");
 	}
 
@@ -163,6 +171,12 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 //		確認無誤修改資料
+
+		// 測試圖片
+		String pic = reqProduct.getProductImg().split(",")[1];
+		toImage(pic, "C://Users//Lenovo//Desktop//pic//" + updatedProduct.getProductName()
+				+ ".jpg");
+
 		productDao.save(updatedProduct);
 		return new ProductResponse("更新商品成功!");
 
@@ -228,4 +242,32 @@ public class ProductServiceImpl implements ProductService {
 		return new ProductResponse(searchList);
 
 	}
+
+//	圖片輸出
+	public static boolean toImage(String imageBase64, String imagePath) {
+		// base64 字符串中没有 ","
+
+		try {
+			byte[] b = Base64.getDecoder().decode(imageBase64);
+			for (int i = 0; i < b.length; ++i) {
+				if (b[i] < 0) {
+					b[i] += 256;
+				}
+			}
+
+			OutputStream out = new FileOutputStream(imagePath);
+			out.write(b);
+			out.flush();
+			out.close();
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+			return false;
+		}
+
+	}
+
 }
