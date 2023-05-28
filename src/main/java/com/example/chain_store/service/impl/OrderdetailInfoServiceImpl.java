@@ -1,24 +1,12 @@
 package com.example.chain_store.service.impl;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.example.chain_store.constans.RtnCode;
-import com.example.chain_store.entity.Members;
 import com.example.chain_store.entity.OrderdetailInfo;
-import com.example.chain_store.entity.Orderdetails;
-import com.example.chain_store.repository.MembersDao;
-import com.example.chain_store.repository.OrderdetailInfoDao;
-import com.example.chain_store.repository.OrderdetailsDao;
-import com.example.chain_store.repository.ProductDao;
 import com.example.chain_store.service.ifs.OrderdetailInfoService;
 import com.example.chain_store.vo.request.OrderdetailInfoRequest;
 import com.example.chain_store.vo.response.OrderdetailInfoResponse;
@@ -26,14 +14,7 @@ import com.example.chain_store.vo.response.OrderdetailInfoResponse;
 @Service
 public class OrderdetailInfoServiceImpl implements OrderdetailInfoService {
 
-	@Autowired
-	private OrderdetailInfoDao infoDao;
-	@Autowired
-	private MembersDao memberDao;
-	@Autowired
-	private ProductDao productDao;
-	@Autowired
-	private OrderdetailsDao orderdetailsDao;
+
 
 	@Override
 	public OrderdetailInfoResponse newOrderdetailInfo(OrderdetailInfoRequest req) {

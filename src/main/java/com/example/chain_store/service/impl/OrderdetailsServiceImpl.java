@@ -43,7 +43,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		}
 
 		List<OrderdetailInfo> orderList = request.getOrderList();
-		String newNumber = "";
+
 		Orderdetails order = request.getOrderdetails();
 		// 執行內部方法確認order
 		String checkResult = this.checkOrderdetails(order);
@@ -57,36 +57,24 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				return new OrderdetailsResponse(order.getUseraccount() + "不存在。");
 			}
 			order.setMemberId(memberOP.get());
-
-//			// 設定初始訂單狀態
-//			order.setOrderStatus("收到訂單");
-			// 設定訂單時間，將當前系統時間寫入
-			long currentTime = System.currentTimeMillis();
-			order.setOrderTime(new Timestamp(currentTime));
-
-			// 透過order資料生成訂單號
-			String time6 = String.valueOf(currentTime % 1000000);// 時間戳末6碼
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMdd");
-			String date4 = dateFormat.format(currentTime);// 月份日期4碼
-			String account4 = order.getUseraccount().substring(0, 4);// 帳號前4碼
-			// 訂單號:時間戳末6碼+月份日期4碼+帳號前4碼+商品號前4碼
-			newNumber = time6 + date4 + account4;
-			// 設定訂單號
+			String newNumber = this.createOrderNumber(order);
 			order.setOrderNumber(newNumber);
 		}
 
 		if (CollectionUtils.isEmpty(orderList)) {
 			return new OrderdetailsResponse("沒有資料新增");
 		}
-		orderdetailsDao.save(order);
+		String newNumber = order.getOrderNumber();
 		for (OrderdetailInfo info : orderList) {
 			String infoResult = this.checkOrderInfo(info);
 			if (infoResult != "success") {
 				return new OrderdetailsResponse(infoResult);
 			}
-			info.setOrderNumber(newNumber);
-			infoDao.save(info);
+			info.setOrderId(newNumber);
+
 		}
+		orderdetailsDao.save(order);
+		infoDao.saveAll(orderList);
 		return new OrderdetailsResponse("新增成功");
 	}
 
@@ -123,7 +111,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				if (result != "success") {
 					return new OrderdetailsResponse(result);
 				}
-				info.setOrderNumber(orderNumber);
+				info.setOrderId(orderNumber);
 			}
 			infoDao.deleteAll(originalList);
 			infoDao.saveAll(newList);
@@ -147,26 +135,20 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 
 	@Override
 	public OrderdetailsResponse delOrder(OrderdetailsRequest request) {
-//		// 排除空的request
-//		if (request == null || CollectionUtils.isEmpty(request.getOrderList())) {
-//			return new OrderdetailsResponse("請檢查request內容");
-//		}
-//		List<Orderdetails> orderList = request.getOrderList();
-//		List<Orderdetails> delList = new ArrayList<>();
-////		for (Orderdetails order : orderList) {
-////			String orderNumber = order.getOrderNumber().getOrderNumber();
-////			Orderdetails orderdetail = orderdetailsDao.findByOrderNumber(orderNumber);
-////			if (orderdetail == null) {
-////				return new OrderdetailsResponse("請檢查訂單號" + orderNumber);
-////			}
-////			delList.add(orderdetail);
-////		}
-//		if (CollectionUtils.isEmpty(delList)) {
-//			return new OrderdetailsResponse("沒有資料刪除 ");
-//		}
-//		orderdetailsDao.deleteAll(delList);
-//		return new OrderdetailsResponse(delList, "刪除成功");
-		return null;
+		// 排除空的request
+		if (request == null || CollectionUtils.isEmpty(request.getOrderList())) {
+			return new OrderdetailsResponse("請檢查request內容");
+		}
+		List<OrderdetailInfo> infoList = request.getOrderList();
+		Orderdetails order = request.getOrderdetails();
+		for (OrderdetailInfo info : infoList) {
+			if (info.getOrderId() != order.getOrderNumber()) {
+				return new OrderdetailsResponse("訂單號與訂單內容不符。");
+			}
+		}
+		infoDao.deleteAll(infoList);
+		orderdetailsDao.delete(order);
+		return new OrderdetailsResponse("刪除成功");
 	}
 
 	@Override
@@ -192,14 +174,24 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		if (request == null) {
 			return new OrderdetailsResponse("請檢查request內容");
 		}
+		Orderdetails order = request.getOrderdetails();
+		if (order == null) {
+			return new OrderdetailsResponse("請檢查request內容");
+		}
 		List<OrderdetailInfo> dbList = request.getOrderList();
 		List<OrderdetailInfo> newList = request.getNewList();
-
-		if (!CollectionUtils.isEmpty(dbList)) {// 讓dbList進行delOrder方法
-//			this.delOrder(new OrderdetailInfoRequest(dbList));
+		if (!CollectionUtils.isEmpty(dbList)) {
+			OrderdetailsResponse result = this.delOrder(new OrderdetailsRequest(dbList, order));
+			if (result.getMessage() != "刪除成功") {
+				return result;
+			}
 		}
-		if (!CollectionUtils.isEmpty(newList)) {// 讓newList進行newOrder方法
-//			this.newOrder(new OrderdetailInfoRequest(newList));
+		if (!CollectionUtils.isEmpty(newList)) {
+
+			OrderdetailsResponse result = this.newOrder(new OrderdetailsRequest(newList, order));
+			if (result.getMessage() != "新增成功") {
+				return result;
+			}
 		}
 		return new OrderdetailsResponse("交換成功");
 
@@ -239,14 +231,35 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 			return "商品總價異常";
 		}
 
-		if (info.getProduct() == null || info.getProduct().getProductCode() == null) {
+		if (info.getProductsId() == null || info.getProductsId().getProductCode() == null) {
 			return "商品代碼異常";
 		}
-		Product infoProduct = productDao.findByProductCode(info.getProduct().getProductCode());
+		Product infoProduct = productDao.findByProductCode(info.getProductsId().getProductCode());
 		if (infoProduct == null) {
 			return "商品代碼異常";
 		}
-		info.setProduct(infoProduct);
+		info.setProductsId(infoProduct);
 		return "success";
+	}
+
+	private String createOrderNumber(Orderdetails order) {
+		String newNumber = "";
+		// 設定訂單時間，將當前系統時間寫入
+		long currentTime = System.currentTimeMillis();
+		order.setOrderTime(new Timestamp(currentTime));
+
+		// 透過order資料生成訂單號
+		String time6 = String.valueOf(currentTime % 1000000);// 時間戳末6碼
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMdd");
+		String date4 = dateFormat.format(currentTime);// 月份日期4碼
+		String account4 = order.getUseraccount().substring(0, 4);// 帳號前4碼
+		// 訂單號:時間戳末6碼+月份日期4碼+帳號前4碼+商品號前4碼
+		newNumber = time6 + date4 + account4;
+		return newNumber;
+	}
+
+	@Override
+	public List<OrderdetailInfo> findOrderdetailInfoByOrderNumber(String orderNumber) {
+		return infoDao.findByOrderId(orderNumber);
 	}
 }

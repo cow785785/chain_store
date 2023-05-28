@@ -2,6 +2,7 @@ package com.example.chain_store.service.ifs;
 
 import java.util.List;
 
+import com.example.chain_store.entity.OrderdetailInfo;
 import com.example.chain_store.entity.Orderdetails;
 import com.example.chain_store.vo.request.OrderdetailsRequest;
 import com.example.chain_store.vo.response.OrderdetailsResponse;
@@ -22,4 +23,6 @@ public interface OrderdetailsService {
 	public List<Orderdetails> findByUseraccountAndOrderStatus(String useraccount, String orderStatus);
 
 	public OrderdetailsResponse refreshCart(OrderdetailsRequest request);
+	
+	public List<OrderdetailInfo> findOrderdetailInfoByOrderNumber(String orderNumber);
 }

@@ -24,7 +24,7 @@ public class OrderdetailInfo {
 	private String orderId;
 	@ManyToOne
 	@JoinColumn(name = "product_id", referencedColumnName = "id")
-	private Product product;
+	private Product productsId;
 
 	@Column(name = "info_total")
 	private BigDecimal infoTotal;
@@ -43,20 +43,20 @@ public class OrderdetailInfo {
 		this.id = id;
 	}
 
-	public String getOrderNumber() {
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderNumber(String orderNumber) {
-		this.orderId = orderNumber;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Product getProductsId() {
+		return productsId;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductsId(Product productsId) {
+		this.productsId = productsId;
 	}
 
 	public BigDecimal getInfoTotal() {

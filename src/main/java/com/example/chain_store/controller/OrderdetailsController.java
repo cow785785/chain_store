@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.chain_store.entity.OrderdetailInfo;
 import com.example.chain_store.entity.Orderdetails;
 import com.example.chain_store.service.ifs.OrderdetailsService;
 import com.example.chain_store.vo.request.OrderdetailsRequest;
@@ -65,5 +66,10 @@ public class OrderdetailsController {
 	@PostMapping("/change_order")
 	public OrderdetailsResponse refreshCart(@RequestBody OrderdetailsRequest request) {
 		return orderdetailsService.refreshCart(request);
+	}
+	
+	@PostMapping("get_orderdetail_info_by_order_number")
+	public List<OrderdetailInfo> findOrderdetailInfoByOrderNumber(@RequestBody String orderNumber) {
+		return orderdetailsService.findOrderdetailInfoByOrderNumber(orderNumber);
 	}
 }
