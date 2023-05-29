@@ -43,16 +43,15 @@ public class Product {
 	@Column(name = "category")
 	private String category;
 
-	public Product() {
-	}
+	@Column(name = "inventory")
+	private Integer inventory;
 
-	public Product(String productCode) {
-		this.productCode = productCode;
+	public Product() {
 	}
 
 	public Product(UUID id, String productCode, String productName, Integer price,
 			String productImg, String productInfo, String productDescribe,
-			String category) {
+			String category, Integer inventory) {
 		super();
 		this.id = id;
 		this.productCode = productCode;
@@ -62,6 +61,11 @@ public class Product {
 		this.productInfo = productInfo;
 		this.productDescribe = productDescribe;
 		this.category = category;
+		this.inventory = inventory;
+	}
+
+	public Product(String productCode) {
+		this.productCode = productCode;
 	}
 
 	public UUID getId() {
@@ -126,6 +130,14 @@ public class Product {
 
 	public void setProductDescribe(String productDescribe) {
 		this.productDescribe = productDescribe;
+	}
+
+	public Integer getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Integer inventory) {
+		this.inventory = inventory;
 	}
 
 }

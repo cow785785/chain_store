@@ -1,5 +1,8 @@
 package com.example.chain_store.service.impl;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,14 @@ public class ProductServiceImpl implements ProductService {
 		if (product.getPrice() <= 0) {
 			return new ProductResponse("商品價格不得小於0!");
 		}
+//		價錢 	是否不為空
+		if (product.getInventory() == null) {
+			return new ProductResponse("請輸入庫存數量!");
+		}
+//		庫存		是否不小於0
+		if (product.getInventory() <= 0) {
+			return new ProductResponse("庫存數量不得小於0!");
+		}
 //		分類 	是否不為空
 		if (!StringUtils.hasText(product.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
@@ -60,7 +71,15 @@ public class ProductServiceImpl implements ProductService {
 		if (!StringUtils.hasText(product.getProductDescribe())) {
 			return new ProductResponse("請輸入商品詳細描述!");
 		}
+
+// 		輸出圖片
+		toImage(product.getProductImg(),
+				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
+						+ product.getProductName() + ".jpg");
+//		將前端可直接提取的路徑存入資料庫
+		product.setProductImg("../../public/img/" + product.getProductName() + ".jpg");
 		productDao.save(product);
+
 		return new ProductResponse("新增商品成功!");
 	}
 
@@ -118,6 +137,17 @@ public class ProductServiceImpl implements ProductService {
 			updatedProduct.setPrice(reqProduct.getPrice());
 		}
 
+//		庫存 	是否不為空
+		if (reqProduct.getInventory() == null) {
+			return new ProductResponse("請輸入庫存數量!");
+		}
+//		庫存 	是否不小於0
+		if (reqProduct.getInventory() <= 0) {
+			return new ProductResponse("庫存數量不得小於0!");
+		} else {
+			updatedProduct.setInventory(reqProduct.getInventory());
+		}
+
 //		分類 	是否不為空
 		if (!StringUtils.hasText(updatedProduct.getCategory())) {
 			return new ProductResponse("請輸入商品分類!");
@@ -128,7 +158,12 @@ public class ProductServiceImpl implements ProductService {
 		if (reqProduct.getProductImg() == null) {
 			return new ProductResponse("請上傳圖片!");
 		} else {
-			updatedProduct.setProductImg(reqProduct.getProductImg());
+//			輸出圖片
+			toImage(reqProduct.getProductImg(),
+					"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
+							+ updatedProduct.getProductName() + ".jpg");
+			updatedProduct.setProductImg(
+					"../../public/img/" + reqProduct.getProductName() + ".jpg");
 		}
 //		商品簡述 	是否不為空
 		if (!StringUtils.hasText(reqProduct.getProductInfo())) {
@@ -144,6 +179,15 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 //		確認無誤修改資料
+
+		// 測試圖片
+//		toImage(reqProduct.getProductImg(),
+//				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img"
+//						+ updatedProduct.getProductName() + ".jpg");
+//
+//		updatedProduct.setProductImg(
+//				"../../public/img/" + updatedProduct.getProductName() + ".jpg");
+
 		productDao.save(updatedProduct);
 		return new ProductResponse("更新商品成功!");
 
@@ -209,4 +253,32 @@ public class ProductServiceImpl implements ProductService {
 		return new ProductResponse(searchList);
 
 	}
+
+//	圖片輸出
+	public static boolean toImage(String imageBase64, String imagePath) {
+		// base64 字符串中没有 ","
+		String pic = imageBase64.split(",")[1];
+		try {
+			byte[] b = Base64.getDecoder().decode(pic);
+			for (int i = 0; i < b.length; ++i) {
+				if (b[i] < 0) {
+					b[i] += 256;
+				}
+			}
+
+			OutputStream out = new FileOutputStream(imagePath);
+			out.write(b);
+			out.flush();
+			out.close();
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+			return false;
+		}
+
+	}
+
 }
