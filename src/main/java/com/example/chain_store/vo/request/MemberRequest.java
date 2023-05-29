@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 
+import javax.persistence.Column;
+
 public class MemberRequest {
 	
 	private String useraccount;
@@ -19,9 +21,14 @@ public class MemberRequest {
 
 	
 	private String address;
-
 	
 	private String phone;
+	
+	private int captcha;
+	
+//	private boolean status;
+
+	private String email;
 
 	
 	private Timestamp registrationTime;
@@ -96,6 +103,33 @@ public class MemberRequest {
 	public void setRegistrationTime(Timestamp registrationTime) {
 		this.registrationTime = registrationTime;
 	}
+
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public int getCaptcha() {
+		return captcha;
+	}
+
+
+	public void setCaptcha(int captcha) {
+		this.captcha = captcha;
+	}
+
+
+	
+
+
+	
 
 
 	
