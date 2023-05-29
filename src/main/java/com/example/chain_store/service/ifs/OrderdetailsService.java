@@ -25,4 +25,6 @@ public interface OrderdetailsService {
 	public OrderdetailsResponse refreshCart(OrderdetailsRequest request);
 	
 	public List<OrderdetailInfo> findOrderdetailInfoByOrderNumber(String orderNumber);
+	
+	public OrderdetailsResponse clearCartByUseraccount(String useraccount);
 }

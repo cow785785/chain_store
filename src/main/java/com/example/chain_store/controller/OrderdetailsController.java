@@ -72,4 +72,9 @@ public class OrderdetailsController {
 	public List<OrderdetailInfo> findOrderdetailInfoByOrderNumber(@RequestBody String orderNumber) {
 		return orderdetailsService.findOrderdetailInfoByOrderNumber(orderNumber);
 	}
+	
+	@PostMapping("/clear_cart")
+	public OrderdetailsResponse clearCart(@RequestBody String useraccount) {
+		return orderdetailsService.clearCartByUseraccount(useraccount);
+	}
 }

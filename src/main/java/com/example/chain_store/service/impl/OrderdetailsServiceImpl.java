@@ -45,6 +45,11 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		List<OrderdetailInfo> orderList = request.getOrderList();
 
 		Orderdetails order = request.getOrderdetails();
+		order.setTotalPrice(BigDecimal.ZERO);
+		for (OrderdetailInfo info : orderList) {
+			order.setTotalPrice(order.getTotalPrice().add(info.getInfoTotal()));
+		}
+		order.setQuantity(orderList.size());
 		// 執行內部方法確認order
 		String checkResult = this.checkOrderdetails(order);
 		if (!checkResult.equals("success")) {
@@ -71,7 +76,6 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 				return new OrderdetailsResponse(infoResult);
 			}
 			info.setOrderId(newNumber);
-
 		}
 		orderdetailsDao.save(order);
 		infoDao.saveAll(orderList);
@@ -142,7 +146,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		List<OrderdetailInfo> infoList = request.getOrderList();
 		Orderdetails order = request.getOrderdetails();
 		for (OrderdetailInfo info : infoList) {
-			if (info.getOrderId() != order.getOrderNumber()) {
+			if (!info.getOrderId().equals(order.getOrderNumber())) {
 				return new OrderdetailsResponse("訂單號與訂單內容不符。");
 			}
 		}
@@ -158,7 +162,7 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 
 	@Override
 	public List<Orderdetails> getOrderdetailsByUserAccount(String useraccount) {
-		return orderdetailsDao.findByUseraccountOrderByOrderTimeDesc(useraccount);
+		return orderdetailsDao.findByUseraccountOrderByOrderTimeDescNotCart(useraccount);
 	}
 
 	public List<Orderdetails> findOrderdetailByUseraccountOrderByOrderTime(String account, int limit) {
@@ -181,18 +185,27 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		List<OrderdetailInfo> dbList = request.getOrderList();
 		List<OrderdetailInfo> newList = request.getNewList();
 		if (!CollectionUtils.isEmpty(dbList)) {
-			OrderdetailsResponse result = this.delOrder(new OrderdetailsRequest(dbList, order));
-			if (result.getMessage() != "刪除成功") {
-				return result;
+			String ordernumber = dbList.get(0).getOrderId();
+			Orderdetails originalOrder = orderdetailsDao.findByOrderNumber(ordernumber);
+			OrderdetailsResponse dbResult = this.delOrder(new OrderdetailsRequest(dbList, originalOrder));
+			if (dbResult.getMessage() != "刪除成功") {
+				return dbResult;
+			}
+			if (!CollectionUtils.isEmpty(newList)) {
+				OrderdetailsResponse newResult = this.newOrder(new OrderdetailsRequest(newList, order));
+				if (newResult.getMessage() != "新增成功") {
+					return newResult;
+				}
+			}
+		} else {
+			if (!CollectionUtils.isEmpty(newList)) {
+				OrderdetailsResponse newResult = this.newOrder(new OrderdetailsRequest(newList, order));
+				if (newResult.getMessage() != "新增成功") {
+					return newResult;
+				}
 			}
 		}
-		if (!CollectionUtils.isEmpty(newList)) {
 
-			OrderdetailsResponse result = this.newOrder(new OrderdetailsRequest(newList, order));
-			if (result.getMessage() != "新增成功") {
-				return result;
-			}
-		}
 		return new OrderdetailsResponse("交換成功");
 
 	}
@@ -209,11 +222,11 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		// 檢查商品金額是否大於0
 		// BigDecimal.ZERO為BigDecimal類別的0
 		// 判斷式類似於(productPrice - 0)<=0，其中(productPrice - 0)為BigDecimal類別
-		if (order.getTotalPrice() == null || order.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
+		if (order.getTotalPrice() == null || order.getTotalPrice().compareTo(BigDecimal.ZERO) < 0) {
 			return "total_price異常";
 		}
 		// 判斷數量quantity
-		if (order.getQuantity() <= 0) {
+		if (order.getQuantity() < 0) {
 			return "quantity異常";
 		}
 		// 判斷寄貨地址delivery_address
@@ -262,4 +275,11 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 	public List<OrderdetailInfo> findOrderdetailInfoByOrderNumber(String orderNumber) {
 		return infoDao.findByOrderId(orderNumber);
 	}
+
+	@Override
+	public OrderdetailsResponse clearCartByUseraccount(String useraccount) {
+		orderdetailsDao.delete(orderdetailsDao.findCartByUseraccount(useraccount));
+		return new OrderdetailsResponse("已清除購物車內容");
+	}
+
 }

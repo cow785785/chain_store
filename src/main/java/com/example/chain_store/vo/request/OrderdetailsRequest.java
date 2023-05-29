@@ -21,8 +21,16 @@ public class OrderdetailsRequest {
 	}
 
 	public OrderdetailsRequest(List<OrderdetailInfo> orderList, Orderdetails orderdetails) {
-		super();
 		this.orderList = orderList;
+		this.orderdetails = orderdetails;
+	}
+	
+	
+
+	public OrderdetailsRequest(List<OrderdetailInfo> orderList, List<OrderdetailInfo> newList,
+			Orderdetails orderdetails) {
+		this.orderList = orderList;
+		this.newList = newList;
 		this.orderdetails = orderdetails;
 	}
 
