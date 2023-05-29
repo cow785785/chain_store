@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
 // 		輸出圖片
 		toImage(product.getProductImg(),
-				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
+				"C://vuegit//chainshop//public//img//"
 						+ product.getProductName() + ".jpg");
 //		將前端可直接提取的路徑存入資料庫
 		product.setProductImg("../../public/img/" + product.getProductName() + ".jpg");
@@ -160,7 +160,7 @@ public class ProductServiceImpl implements ProductService {
 		} else {
 //			輸出圖片
 			toImage(reqProduct.getProductImg(),
-					"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
+					"C://vuegit//chainshop//public//img//"
 							+ updatedProduct.getProductName() + ".jpg");
 			updatedProduct.setProductImg(
 					"../../public/img/" + reqProduct.getProductName() + ".jpg");

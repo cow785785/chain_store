@@ -362,7 +362,7 @@ public class MemberServiceImpl implements MembersService {
 		    }
 		String storedPassword = member.getPassword();
 		String partialPassword = storedPassword.substring(0, 4); // 提取前四個字元
-		String encryptedPassword = storedPassword.substring(4); // 提取加密後的剩餘部分
+		String encryptedPassword = partialPassword.substring(4); // 提取加密後的剩餘部分
 
 		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword), StandardCharsets.UTF_8);
 
