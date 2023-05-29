@@ -71,11 +71,14 @@ public class ProductServiceImpl implements ProductService {
 		if (!StringUtils.hasText(product.getProductDescribe())) {
 			return new ProductResponse("請輸入商品詳細描述!");
 		}
-		productDao.save(product);
 
-		// 測試圖片
-//		String path = "C:\Users\Lenovo\Desktop\pic";
-//		toImage(product.getProductImg(), "C://Users//Lenovo//Desktop//pic//test.jpg");
+// 		輸出圖片
+		toImage(product.getProductImg(),
+				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
+						+ product.getProductName() + ".jpg");
+//		將前端可直接提取的路徑存入資料庫
+		product.setProductImg("../../public/img/" + product.getProductName() + ".jpg");
+		productDao.save(product);
 
 		return new ProductResponse("新增商品成功!");
 	}
@@ -155,7 +158,12 @@ public class ProductServiceImpl implements ProductService {
 		if (reqProduct.getProductImg() == null) {
 			return new ProductResponse("請上傳圖片!");
 		} else {
-			updatedProduct.setProductImg(reqProduct.getProductImg());
+//			輸出圖片
+			toImage(reqProduct.getProductImg(),
+					"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
+							+ updatedProduct.getProductName() + ".jpg");
+			updatedProduct.setProductImg(
+					"../../public/img/" + reqProduct.getProductName() + ".jpg");
 		}
 //		商品簡述 	是否不為空
 		if (!StringUtils.hasText(reqProduct.getProductInfo())) {
@@ -173,9 +181,12 @@ public class ProductServiceImpl implements ProductService {
 //		確認無誤修改資料
 
 		// 測試圖片
-		String pic = reqProduct.getProductImg().split(",")[1];
-		toImage(pic, "C://Users//Lenovo//Desktop//pic//" + updatedProduct.getProductName()
-				+ ".jpg");
+//		toImage(reqProduct.getProductImg(),
+//				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img"
+//						+ updatedProduct.getProductName() + ".jpg");
+//
+//		updatedProduct.setProductImg(
+//				"../../public/img/" + updatedProduct.getProductName() + ".jpg");
 
 		productDao.save(updatedProduct);
 		return new ProductResponse("更新商品成功!");
@@ -246,9 +257,9 @@ public class ProductServiceImpl implements ProductService {
 //	圖片輸出
 	public static boolean toImage(String imageBase64, String imagePath) {
 		// base64 字符串中没有 ","
-
+		String pic = imageBase64.split(",")[1];
 		try {
-			byte[] b = Base64.getDecoder().decode(imageBase64);
+			byte[] b = Base64.getDecoder().decode(pic);
 			for (int i = 0; i < b.length; ++i) {
 				if (b[i] < 0) {
 					b[i] += 256;
