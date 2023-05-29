@@ -19,6 +19,7 @@ dependencies {
 	//implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'mysql:mysql-connector-java:8.0.31'
 //	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.6'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

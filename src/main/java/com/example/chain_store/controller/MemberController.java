@@ -6,7 +6,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +57,13 @@ public class MemberController {
 	}
 	
 	@PostMapping("/loginMember")
-	public MembersResponse loginMember(@RequestBody MemberRequest memberRequest) {
+	public MembersResponse loginMember(@RequestBody MemberRequest memberRequest,HttpSession httpSession) {
+		MembersResponse membersResponse = membersService.loginMember(memberRequest);
+		if(membersResponse.getMessage().equals("登陸成功")) {
+			httpSession.setAttribute("account", memberRequest);
+			httpSession.setAttribute("password", memberRequest);
+			httpSession.setMaxInactiveInterval(30);
+		}
 		return membersService.loginMember(memberRequest);
 	}
 	
@@ -70,6 +75,22 @@ public class MemberController {
 	@PostMapping("/updatePassword")
 	public MembersResponse updatePassword(@RequestBody MemberRequest memberRequest) {
 		return membersService.updatePassword(memberRequest);
+	}
+	
+	
+	@PostMapping("/checkcaptcha")
+	public MembersResponse checkcaptcha(@RequestBody MemberRequest memberRequest) {
+		return membersService.checkcaptcha(memberRequest);
+	}
+	
+	@PostMapping("/active")
+	public MembersResponse active(@RequestBody MemberRequest memberRequest) {
+		return membersService.active(memberRequest);
+	}
+	
+	@PostMapping("/stopMember")
+	public MembersResponse stopMember(@RequestBody MemberRequest memberRequest) {
+		return membersService.stopMember(memberRequest);
 	}
 
 }

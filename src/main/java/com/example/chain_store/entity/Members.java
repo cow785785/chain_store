@@ -3,6 +3,8 @@ package com.example.chain_store.entity;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -23,29 +25,101 @@ public class Members {
 	@Column(name = "id")
 	@Type(type = "org.hibernate.type.UUIDCharType")
 	private UUID id;
+
 	@Column(name = "useraccount")
 	private String useraccount;
+
 	@Column(name = "password")
 	private String password;
+
 	@Column(name = "username")
 	private String username;
+
 	@Column(name = "birthdate")
 	private LocalDate birthDate;
+
 	@Column(name = "address")
 	private String address;
+
 	@Column(name = "phone")
 	private String phone;
-	@Column(name = "registration_time")
-	private Timestamp registrationTime;
-	@Column(name = "status")
-	private boolean status;
-	@Column(name = "email")
-	private String email;
+
 	@Column(name = "point")
 	private int point;
 
+	@Column(name = "email")
+	private String email;
+	
+	@Column(name = "captcha")
+	private Integer captcha;
+	
+//	@Column(name = "email_verified")
+//    private boolean emailVerified;
+//
+//    @Column(name = "email_verification_token")
+//    private String emailVerificationToken;
+    
+//    public boolean isEmailVerified() {
+//        return emailVerified;
+//    }
+
+	@Column(name = "registration_time")
+	private Timestamp registrationTime;
+	
+	@Column(name = "active")
+	private Boolean active;
+
 	public Members() {
 
+	}
+	
+	
+
+	public Members(UUID id, String useraccount, String password, String username, LocalDate birthDate, String address,
+			String phone, int point, String email, Integer captcha, Timestamp registrationTime,
+			Boolean active) {
+		this.id = id;
+		this.useraccount = useraccount;
+		this.password = password;
+		this.username = username;
+		this.birthDate = birthDate;
+		this.address = address;
+		this.phone = phone;
+		this.point = point;
+		this.email = email;
+		this.captcha = captcha;
+		this.registrationTime = registrationTime;
+		this.active = active;
+	}
+
+
+
+	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
+			String phone, String email,Integer captcha, Timestamp registrationTime) {
+		this.useraccount = useraccount;
+		this.password = password;
+		this.username = username;
+		this.birthDate = birthDate;
+		this.address = address;
+		this.phone = phone;
+		this.email = email;
+		this.captcha=captcha;
+		this.registrationTime = registrationTime;
+	}
+
+
+
+	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
+			String phone, int point, String email, Timestamp registrationTime) {
+		this.useraccount = useraccount;
+		this.password = password;
+		this.username = username;
+		this.birthDate = birthDate;
+		this.address = address;
+		this.phone = phone;
+		this.point = point;
+		this.email = email;
+		this.registrationTime = registrationTime;
 	}
 
 	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
@@ -70,22 +144,6 @@ public class Members {
 		this.address = address;
 		this.phone = phone;
 		this.registrationTime = registrationTime;
-	}
-
-	public Members(UUID id, String useraccount, String password, String username, LocalDate birthDate, String address,
-			String phone, Timestamp registrationTime, boolean status, String email, int point) {
-		super();
-		this.id = id;
-		this.useraccount = useraccount;
-		this.password = password;
-		this.username = username;
-		this.birthDate = birthDate;
-		this.address = address;
-		this.phone = phone;
-		this.registrationTime = registrationTime;
-		this.status = status;
-		this.email = email;
-		this.point = point;
 	}
 
 	public UUID getId() {
@@ -152,10 +210,68 @@ public class Members {
 		this.registrationTime = registrationTime;
 	}
 
+
+	public int getPoint() {
+		return point;
+	}
+
+	public void setPoint(int point) {
+		this.point = point;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}	
+	
+	
+	
+//	public void setEmailVerified(boolean emailVerified) {
+//        this.emailVerified = emailVerified;
+//    }
+//
+//    public String getEmailVerificationToken() {
+//        return emailVerificationToken;
+//    }
+//
+//    public void setEmailVerificationToken(String emailVerificationToken) {
+//        this.emailVerificationToken = emailVerificationToken;
+//    }
+
+	public Integer getCaptcha() {
+		return captcha;
+	}
+
+
+
+	public void setCaptcha(Integer captcha) {
+		this.captcha = captcha;
+	}
+
+
+
+	public Boolean getActive() {
+		return active;
+	}
+
+
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+
+
 	@Override
 	public String toString() {
-		return "Member{" + "id='" + id + '\'' + ", useraccount='" + useraccount + '\'' + ", password='" + password
-				+ '\'' + ", username='" + username + '\'' + ", birthdate=" + birthDate + ", address='" + address + '\''
-				+ ", phone='" + phone + '\'' + ", registrationTime=" + registrationTime + '}';
+		return "Members [id=" + id + ", useraccount=" + useraccount + ", password=" + password + ", username="
+				+ username + ", birthDate=" + birthDate + ", address=" + address + ", phone=" + phone + ", point="
+				+ point + ", email=" + email + ", captcha=" + captcha + ", registrationTime=" + registrationTime
+				+ ", active=" + active + "]";
 	}
+
+
 }

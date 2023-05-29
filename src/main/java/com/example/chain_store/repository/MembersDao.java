@@ -15,4 +15,10 @@ public interface MembersDao extends JpaRepository<Members, String> {
 	Optional<Members> findByUsername(String username);
 
 	List<Members> findByUseraccountContaining(String keyword);
+	
+//	public Members findByUseraccountAndPassword(String account,String pwd); 
+	
+//	Optional<Members> findByUseraccountAndPassword(String account); 
+	
+	
 }
