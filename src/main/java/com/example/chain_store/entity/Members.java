@@ -53,15 +53,6 @@ public class Members {
 	@Column(name = "captcha")
 	private Integer captcha;
 	
-//	@Column(name = "email_verified")
-//    private boolean emailVerified;
-//
-//    @Column(name = "email_verification_token")
-//    private String emailVerificationToken;
-    
-//    public boolean isEmailVerified() {
-//        return emailVerified;
-//    }
 
 	@Column(name = "registration_time")
 	private Timestamp registrationTime;
@@ -109,18 +100,18 @@ public class Members {
 
 
 
-	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
-			String phone, int point, String email, Timestamp registrationTime) {
-		this.useraccount = useraccount;
-		this.password = password;
-		this.username = username;
-		this.birthDate = birthDate;
-		this.address = address;
-		this.phone = phone;
-		this.point = point;
-		this.email = email;
-		this.registrationTime = registrationTime;
-	}
+//	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
+//			String phone, int point, String email, Timestamp registrationTime) {
+//		this.useraccount = useraccount;
+//		this.password = password;
+//		this.username = username;
+//		this.birthDate = birthDate;
+//		this.address = address;
+//		this.phone = phone;
+//		this.point = point;
+//		this.email = email;
+//		this.registrationTime = registrationTime;
+//	}
 
 	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
 			String phone, Timestamp registrationTime) {

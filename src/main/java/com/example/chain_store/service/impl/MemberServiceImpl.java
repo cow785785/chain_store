@@ -179,16 +179,9 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("失敗！輸入值不能為空");
 		}
 
-		// 對密碼進行Base64編碼
-		String encodedPassword = Base64.getEncoder()
-				.encodeToString(memberRequest.getPassword().getBytes(StandardCharsets.UTF_8));
-		String partialPassword = memberRequest.getPassword().substring(0, 4); // 提取前四個字元
-		String encryptedPassword = Base64.getEncoder()
-				.encodeToString(memberRequest.getPassword().getBytes(StandardCharsets.UTF_8)); // 將剩餘部分進行 Base64 編碼
+		
 
-		String displayedPassword = partialPassword + encryptedPassword.substring(4); // 將前四個字元與剩餘部分加密的密碼結合
-
-		Members members = new Members(memberRequest.getUseraccount(), displayedPassword, memberRequest.getUsername(),
+		Members members = new Members(memberRequest.getUseraccount(), memberRequest.getPassword(), memberRequest.getUsername(),
 				memberRequest.getBirthDate(), memberRequest.getAddress(), memberRequest.getPhone(),
 				memberRequest.getEmail(), randomNumbers, memberRequest.getRegistrationTime());
 		
@@ -360,14 +353,7 @@ public class MemberServiceImpl implements MembersService {
 		 if (!member.getActive()) {
 		        return new MembersResponse("帳號已被停用");
 		    }
-		String storedPassword = member.getPassword();
-		String partialPassword = storedPassword.substring(0, 4); // 提取前四個字元
-		String encryptedPassword = partialPassword.substring(4); // 提取加密後的剩餘部分
-
-		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword), StandardCharsets.UTF_8);
-
-		String originalPassword = partialPassword + decodedPassword; // 將前四個字元與解碼後的密碼結合
-		if (!memberRequest.getPassword().equals(originalPassword)) {
+		if (!memberRequest.getPassword().equals(member.getPassword())) {
 			return new MembersResponse("密碼驗證失敗");
 		}
 
@@ -429,16 +415,8 @@ public class MemberServiceImpl implements MembersService {
 		}
 	
 		Members member = members.get();
-		String storedPassword = member.getPassword();
-		String partialPassword = storedPassword.substring(0, 4); // 提取前四個字元
-		String encryptedPassword = storedPassword.substring(4); // 提取加密後的剩餘部分
-
-		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword), StandardCharsets.UTF_8);
-
-		String originalPassword = partialPassword + decodedPassword; // 將前四個字元與解碼後的密碼結合
 		
-		
-		if (memberRequest.getPassword().equals(originalPassword)) {
+		if (!memberRequest.getPassword().equals(member.getPassword())) {
 			return new MembersResponse("密碼驗證失敗");
 		}
 		
