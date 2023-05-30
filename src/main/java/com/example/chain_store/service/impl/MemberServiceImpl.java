@@ -185,7 +185,7 @@ public class MemberServiceImpl implements MembersService {
 				memberRequest.getBirthDate(), memberRequest.getAddress(), memberRequest.getPhone(),
 				memberRequest.getEmail(), randomNumbers, memberRequest.getRegistrationTime());
 		
-		 members.setActive(true); // 設置帳號為激活狀態
+		 members.setActive(false); // 設置帳號未激活狀態
 
 		// 換算時間格式
 		long timestampMillis = System.currentTimeMillis();
@@ -350,7 +350,7 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		Members member = optionalMember.get();
-		 if (!member.getActive()) {
+		 if (!member.isActive()) {
 		        return new MembersResponse("帳號已被停用");
 		    }
 		if (!memberRequest.getPassword().equals(member.getPassword())) {
@@ -396,9 +396,16 @@ public class MemberServiceImpl implements MembersService {
 	public MembersResponse checkcaptcha(MemberRequest memberRequest) {
 		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (optionalMember.isPresent()) {
-			if (optionalMember.get().getCaptcha() == memberRequest.getCaptcha()) {
-				return new MembersResponse("驗證成功");
-			}
+			Members member = optionalMember.get();
+	        if (member.getCaptcha() == memberRequest.getCaptcha()) {
+	            member.setActive(true); // 將帳號狀態設置為true
+	            try {
+	                membersDao.save(member); // 更新帳號狀態到資料庫
+	            } catch (Exception e) {
+	                return new MembersResponse("更新狀態失敗");
+	            }
+	            return new MembersResponse("驗證成功");
+	        }
 
 		}
 		return new MembersResponse("驗證碼錯誤");
@@ -421,7 +428,7 @@ public class MemberServiceImpl implements MembersService {
 		}
 		
 
-		if (member.getActive()) {
+		if (member.isActive()) {
 			return new MembersResponse("已登入");
 
 		}

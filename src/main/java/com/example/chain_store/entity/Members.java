@@ -51,14 +51,14 @@ public class Members {
 	private String email;
 	
 	@Column(name = "captcha")
-	private Integer captcha;
+	private int captcha;
 	
 
 	@Column(name = "registration_time")
 	private Timestamp registrationTime;
 	
 	@Column(name = "active")
-	private Boolean active;
+	private boolean active;
 
 	public Members() {
 
@@ -66,10 +66,9 @@ public class Members {
 	
 	
 
-	public Members(UUID id, String useraccount, String password, String username, LocalDate birthDate, String address,
-			String phone, int point, String email, Integer captcha, Timestamp registrationTime,
-			Boolean active) {
-		this.id = id;
+	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
+			String phone, int point, String email, int captcha, Timestamp registrationTime,
+			boolean active) {
 		this.useraccount = useraccount;
 		this.password = password;
 		this.username = username;
@@ -86,7 +85,7 @@ public class Members {
 
 
 	public Members(String useraccount, String password, String username, LocalDate birthDate, String address,
-			String phone, String email,Integer captcha, Timestamp registrationTime) {
+			String phone, String email,int captcha, Timestamp registrationTime) {
 		this.useraccount = useraccount;
 		this.password = password;
 		this.username = username;
@@ -232,28 +231,7 @@ public class Members {
 //        this.emailVerificationToken = emailVerificationToken;
 //    }
 
-	public Integer getCaptcha() {
-		return captcha;
-	}
-
-
-
-	public void setCaptcha(Integer captcha) {
-		this.captcha = captcha;
-	}
-
-
-
-	public Boolean getActive() {
-		return active;
-	}
-
-
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
+	
 
 
 	@Override
@@ -262,6 +240,30 @@ public class Members {
 				+ username + ", birthDate=" + birthDate + ", address=" + address + ", phone=" + phone + ", point="
 				+ point + ", email=" + email + ", captcha=" + captcha + ", registrationTime=" + registrationTime
 				+ ", active=" + active + "]";
+	}
+
+
+
+	public int getCaptcha() {
+		return captcha;
+	}
+
+
+
+	public void setCaptcha(int captcha) {
+		this.captcha = captcha;
+	}
+
+
+
+	public boolean isActive() {
+		return active;
+	}
+
+
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 
