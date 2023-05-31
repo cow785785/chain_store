@@ -3,6 +3,7 @@ package com.example.chain_store.service.impl;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +57,6 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 			// 不成功則回傳內部方法訊息
 			return new OrderdetailsResponse(checkResult);
 		} else {// 開始寫入初始資料
-
 			Optional<Members> memberOP = membersDao.findByUseraccount(order.getUseraccount());
 			if (!memberOP.isPresent()) {
 				return new OrderdetailsResponse(order.getUseraccount() + "不存在。");
@@ -70,15 +70,25 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 			return new OrderdetailsResponse("沒有資料新增");
 		}
 		String newNumber = order.getOrderNumber();
+		List<Product> boughtList = new ArrayList<>();
 		for (OrderdetailInfo info : orderList) {
+			info.setProductsId(productDao.findByProductCode(info.getProductsId().getProductCode()));
 			String infoResult = this.checkOrderInfo(info);
 			if (infoResult != "success") {
 				return new OrderdetailsResponse(infoResult);
 			}
 			info.setOrderId(newNumber);
+			// 進行商品庫存計算
+			info.getProductsId().setInventory(info.getProductsId().getInventory() - info.getInfoQuantity());
+			Product bought = info.getProductsId();
+			// 將該商品庫存扣除購買數量
+			boughtList.add(bought);
 		}
 		orderdetailsDao.save(order);
 		infoDao.saveAll(orderList);
+//		if (order.getOrderStatus().equals("カート入り")) {
+//			productDao.saveAll(boughtList);
+//		}
 		return new OrderdetailsResponse("新增成功");
 	}
 
@@ -251,7 +261,10 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 		if (infoProduct == null) {
 			return "商品代碼異常";
 		}
-		info.setProductsId(infoProduct);
+		int afterBoughtInventory = info.getProductsId().getInventory() - info.getInfoQuantity();
+		if (afterBoughtInventory < 0) {
+			return "商品庫存不足";
+		}
 		return "success";
 	}
 
@@ -278,7 +291,9 @@ public class OrderdetailsServiceImpl implements OrderdetailsService {
 
 	@Override
 	public OrderdetailsResponse clearCartByUseraccount(String useraccount) {
-		orderdetailsDao.delete(orderdetailsDao.findCartByUseraccount(useraccount));
+		if (!CollectionUtils.isEmpty(orderdetailsDao.findCartByUseraccount(useraccount))) {
+			orderdetailsDao.deleteAll(orderdetailsDao.findCartByUseraccount(useraccount));
+		}
 		return new OrderdetailsResponse("已清除購物車內容");
 	}
 

@@ -19,7 +19,7 @@ public interface OrderdetailsDao extends JpaRepository<Orderdetails, String> {
 	public List<Orderdetails> findByUseraccountAndOrderStatus(String account, String orderStatus);
 	
 	@Query(value = "SELECT * FROM orderdetails a WHERE a.useraccount = ?1 and a.order_status = 'カート入り'", nativeQuery = true)
-	public Orderdetails findCartByUseraccount(String account);
+	public List<Orderdetails> findCartByUseraccount(String account);
 	
 	@Query(value = "SELECT * FROM orderdetails a WHERE a.useraccount = ?1 and a.order_status != 'カート入り'", nativeQuery = true)
 	public List<Orderdetails> findByUseraccountOrderByOrderTimeDescNotCart(String account);

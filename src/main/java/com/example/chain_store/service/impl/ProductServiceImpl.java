@@ -74,8 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
 // 		輸出圖片
 		toImage(product.getProductImg(),
-				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
-						+ product.getProductName() + ".jpg");
+				"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//" + product.getProductName() + ".jpg");
 //		將前端可直接提取的路徑存入資料庫
 		product.setProductImg("../../public/img/" + product.getProductName() + ".jpg");
 		productDao.save(product);
@@ -116,8 +115,7 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 //		從資料庫取出要修改的商品
-		Product updatedProduct = productDao
-				.findByProductCode(reqProduct.getProductCode());
+		Product updatedProduct = productDao.findByProductCode(reqProduct.getProductCode());
 
 // 		名稱 是否不為空
 		if (!StringUtils.hasText(updatedProduct.getProductName())) {
@@ -158,12 +156,13 @@ public class ProductServiceImpl implements ProductService {
 		if (reqProduct.getProductImg() == null) {
 			return new ProductResponse("請上傳圖片!");
 		} else {
+			if (!reqProduct.getProductImg().equals(updatedProduct.getProductImg())) {//如果圖片與資料庫不同再進行
 //			輸出圖片
-			toImage(reqProduct.getProductImg(),
-					"C://Users//Lenovo//Desktop//HTML//chainshop//public//img//"
-							+ updatedProduct.getProductName() + ".jpg");
-			updatedProduct.setProductImg(
-					"../../public/img/" + reqProduct.getProductName() + ".jpg");
+				toImage(reqProduct.getProductImg(),
+						"C://Users//s4050//Desktop//JAVA Lesson//front end//chainshop//chainshop//public//img//"
+								+ updatedProduct.getProductName() + ".jpg");
+				updatedProduct.setProductImg("../../public/img/" + reqProduct.getProductName() + ".jpg");
+			}
 		}
 //		商品簡述 	是否不為空
 		if (!StringUtils.hasText(reqProduct.getProductInfo())) {
