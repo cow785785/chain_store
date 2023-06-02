@@ -21,6 +21,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.regex.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -135,8 +138,10 @@ public class MemberServiceImpl implements MembersService {
 		return randomNumber;
 	}
 
-	int randomNumbers = generateRandomNumber();
+	int randomNumbers = generateRandomNumber();//註冊用
+	int randomNumbers2 = generateRandomNumber();//修改密碼用
 	String emailContent = "歡迎註冊會員！您的驗證碼為：" + randomNumbers;
+	
 
 	@Override
 	public MembersResponse addMember(MemberRequest memberRequest) {
@@ -179,13 +184,11 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("失敗！輸入值不能為空");
 		}
 
-		
+		Members members = new Members(memberRequest.getUseraccount(), memberRequest.getPassword(),
+				memberRequest.getUsername(), memberRequest.getBirthDate(), memberRequest.getAddress(),
+				memberRequest.getPhone(), memberRequest.getEmail(), randomNumbers, memberRequest.getRegistrationTime());
 
-		Members members = new Members(memberRequest.getUseraccount(), memberRequest.getPassword(), memberRequest.getUsername(),
-				memberRequest.getBirthDate(), memberRequest.getAddress(), memberRequest.getPhone(),
-				memberRequest.getEmail(), randomNumbers, memberRequest.getRegistrationTime());
-		
-		 members.setActive(false); // 設置帳號未激活狀態
+		members.setActive(false); // 設置帳號未激活狀態
 
 		// 換算時間格式
 		long timestampMillis = System.currentTimeMillis();
@@ -239,6 +242,12 @@ public class MemberServiceImpl implements MembersService {
 	@Override
 	public List<Members> readMember() {
 		return membersDao.findAll();
+	}
+
+	@Override
+	public Page<Members> readMember(int page, int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize);
+		return membersDao.findAll(pageable);
 	}
 
 	@Override
@@ -350,9 +359,9 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		Members member = optionalMember.get();
-		 if (!member.isActive()) {
-		        return new MembersResponse("帳號已被停用");
-		    }
+		if (!member.isActive()) {
+			return new MembersResponse("帳號已被停用");
+		}
 		if (!memberRequest.getPassword().equals(member.getPassword())) {
 			return new MembersResponse("密碼驗證失敗");
 		}
@@ -382,6 +391,9 @@ public class MemberServiceImpl implements MembersService {
 		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (optionalMember.isPresent()) {
 			Members member = optionalMember.get();
+			if (memberRequest.getCaptcha()!=member.getCaptcha()) {
+				return new MembersResponse("驗證碼不正確");
+			}
 			member.setPassword(memberRequest.getPassword()); // 更新密码
 
 			membersDao.save(member);
@@ -397,15 +409,15 @@ public class MemberServiceImpl implements MembersService {
 		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
 		if (optionalMember.isPresent()) {
 			Members member = optionalMember.get();
-	        if (member.getCaptcha() == memberRequest.getCaptcha()) {
-	            member.setActive(true); // 將帳號狀態設置為true
-	            try {
-	                membersDao.save(member); // 更新帳號狀態到資料庫
-	            } catch (Exception e) {
-	                return new MembersResponse("更新狀態失敗");
-	            }
-	            return new MembersResponse("驗證成功");
-	        }
+			if (member.getCaptcha() == memberRequest.getCaptcha()) {
+				member.setActive(true); // 將帳號狀態設置為true
+				try {
+					membersDao.save(member); // 更新帳號狀態到資料庫
+				} catch (Exception e) {
+					return new MembersResponse("更新狀態失敗");
+				}
+				return new MembersResponse("驗證成功");
+			}
 
 		}
 		return new MembersResponse("驗證碼錯誤");
@@ -420,13 +432,12 @@ public class MemberServiceImpl implements MembersService {
 		if (!StringUtils.hasText(memberRequest.getUseraccount()) || !StringUtils.hasText(memberRequest.getPassword())) {
 			return new MembersResponse("不能是空的");
 		}
-	
+
 		Members member = members.get();
-		
+
 		if (!memberRequest.getPassword().equals(member.getPassword())) {
 			return new MembersResponse("密碼驗證失敗");
 		}
-		
 
 		if (member.isActive()) {
 			return new MembersResponse("已登入");
@@ -444,33 +455,31 @@ public class MemberServiceImpl implements MembersService {
 
 	@Override
 	public MembersResponse stopMember(MemberRequest memberRequest) {
-	    MembersResponse response = new MembersResponse();
-	    try {
-	        // 从memberRequest中获取需要停用的会员信息
-	        String userAccount = memberRequest.getUseraccount();
-	        
-	        // 根据会员账号执行停用会员的逻辑
-	        Optional<Members> memberOptional = membersDao.findByUseraccount(userAccount);
-	        if (memberOptional.isPresent()) {
-	            Members member = memberOptional.get();
-	            member.setActive(false);
-	            membersDao.save(member);
-	            
-	            //停用會員訊息
-	            response.setMessage("停用會員成功");
+		MembersResponse response = new MembersResponse();
+		try {
+			// 從memberRequest中獲取需要停用的會員信息
+			String userAccount = memberRequest.getUseraccount();
 
-	        } else {
-	            response.setMessage("找不到該會員帳號");
+			// 根據會員帳號執行停用會員邏輯
+			Optional<Members> memberOptional = membersDao.findByUseraccount(userAccount);
+			if (memberOptional.isPresent()) {
+				Members member = memberOptional.get();
+				member.setActive(false);
+				membersDao.save(member);
 
-	        }
-	    } catch (Exception e) {
-	        // 发生异常时设置错误信息
-	        response.setMessage("停用会员失败: " + e.getMessage());
+				// 停用會員訊息
+				response.setMessage("停用會員成功");
 
-	    }
-	    
-	    return new MembersResponse("已停用");
+			} else {
+				response.setMessage("找不到該會員帳號");
+
+			}
+		} catch (Exception e) {
+			response.setMessage("停用會員失敗: " + e.getMessage());
+
+		}
+
+		return new MembersResponse("已停用");
 	}
-
 
 }

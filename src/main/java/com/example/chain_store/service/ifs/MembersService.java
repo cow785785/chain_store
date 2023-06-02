@@ -2,6 +2,8 @@ package com.example.chain_store.service.ifs;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.example.chain_store.entity.Members;
 import com.example.chain_store.vo.request.MemberRequest;
 import com.example.chain_store.vo.response.MembersResponse;
@@ -30,6 +32,8 @@ public interface MembersService {
 	public MembersResponse active(MemberRequest memberRequest);//登入狀態
 	
 	public MembersResponse stopMember(MemberRequest memberRequest);//停用帳號
+	
+	public Page<Members> readMember(int page, int pageSize);//分頁方法
 	
 
 

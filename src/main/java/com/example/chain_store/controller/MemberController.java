@@ -5,9 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.chain_store.entity.Members;
@@ -34,6 +38,12 @@ public class MemberController {
 	@PostMapping("/readMember")
 	public List<Members> readMember() {
 		return membersService.readMember();
+	}
+	
+	@PostMapping("/readMemberPage")
+	public Page<Members> readMember(@RequestParam("page") int page, @RequestParam("pageSize")int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize);
+	    return membersDao.findAll(pageable);
 	}
 	
 	@PostMapping("/readMember2")
