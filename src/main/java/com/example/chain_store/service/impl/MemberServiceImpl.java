@@ -2,23 +2,17 @@ package com.example.chain_store.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-
 import java.time.LocalDate;
-
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Base64;
-import java.nio.charset.StandardCharsets;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
-import java.util.regex.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -74,7 +68,8 @@ public class MemberServiceImpl implements MembersService {
 
 		// 檢查生日格式是否符合要求
 		String pattern = "\\d{4}-\\d{2}-\\d{2}";
-		String birthDateString = birthDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String birthDateString = birthDate
+				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		if (!birthDateString.matches(pattern)) {
 			return false;
 		}
@@ -161,7 +156,8 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		// 檢查帳號是否已經存在
-		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionMember = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (optionMember.isPresent()) {
 			return new MembersResponse("失敗！帳號已存在");
 		}
@@ -171,28 +167,26 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		if (memberRequest.getPhone() == null || memberRequest.getPhone().isEmpty()
-				|| memberRequest.getBirthDate() == null || memberRequest.getUseraccount() == null
-				|| memberRequest.getUseraccount().isEmpty() || memberRequest.getPassword() == null
-				|| memberRequest.getPassword().isEmpty() || memberRequest.getUsername() == null
-				|| memberRequest.getUsername().isEmpty() || memberRequest.getAddress() == null
-				|| memberRequest.getAddress().isEmpty() || memberRequest.getEmail().isEmpty()) {
+				|| memberRequest.getBirthDate() == null
+				|| memberRequest.getUseraccount() == null
+				|| memberRequest.getUseraccount().isEmpty()
+				|| memberRequest.getPassword() == null
+				|| memberRequest.getPassword().isEmpty()
+				|| memberRequest.getUsername() == null
+				|| memberRequest.getUsername().isEmpty()
+				|| memberRequest.getAddress() == null
+				|| memberRequest.getAddress().isEmpty()
+				|| memberRequest.getEmail().isEmpty()) {
 			return new MembersResponse("失敗！輸入值不能為空");
 		}
 
-		// 對密碼進行Base64編碼
-		String encodedPassword = Base64.getEncoder()
-				.encodeToString(memberRequest.getPassword().getBytes(StandardCharsets.UTF_8));
-		String partialPassword = memberRequest.getPassword().substring(0, 4); // 提取前四個字元
-		String encryptedPassword = Base64.getEncoder()
-				.encodeToString(memberRequest.getPassword().getBytes(StandardCharsets.UTF_8)); // 將剩餘部分進行 Base64 編碼
+		Members members = new Members(memberRequest.getUseraccount(),
+				memberRequest.getPassword(), memberRequest.getUsername(),
+				memberRequest.getBirthDate(), memberRequest.getAddress(),
+				memberRequest.getPhone(), memberRequest.getEmail(), randomNumbers,
+				memberRequest.getRegistrationTime());
 
-		String displayedPassword = partialPassword + encryptedPassword.substring(4); // 將前四個字元與剩餘部分加密的密碼結合
-
-		Members members = new Members(memberRequest.getUseraccount(), displayedPassword, memberRequest.getUsername(),
-				memberRequest.getBirthDate(), memberRequest.getAddress(), memberRequest.getPhone(),
-				memberRequest.getEmail(), randomNumbers, memberRequest.getRegistrationTime());
-		
-		 members.setActive(true); // 設置帳號為激活狀態
+		members.setActive(true); // 設置帳號為激活狀態
 
 		// 換算時間格式
 		long timestampMillis = System.currentTimeMillis();
@@ -229,7 +223,8 @@ public class MemberServiceImpl implements MembersService {
 		try {
 
 			// 設定郵件內容
-			helper.setText("歡迎註冊會員！" + "\n" + "您的驗證碼 : " + emailContent + "\n以下連結回去登入畫面 : " + "http://localhost:5173/");
+			helper.setText("歡迎註冊會員！" + "\n" + "您的驗證碼 : " + emailContent
+					+ "\n以下連結回去登入畫面 : " + "http://localhost:5173/");
 
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
@@ -238,9 +233,11 @@ public class MemberServiceImpl implements MembersService {
 
 		mailSender.send(message);
 
-		return new MembersResponse(memberRequest.getUseraccount(), memberRequest.getPassword(),
-				memberRequest.getUsername(), memberRequest.getBirthDate(), memberRequest.getAddress(),
-				memberRequest.getPhone(), members.getPoint(), memberRequest.getEmail(), "註冊成功");
+		return new MembersResponse(memberRequest.getUseraccount(),
+				memberRequest.getPassword(), memberRequest.getUsername(),
+				memberRequest.getBirthDate(), memberRequest.getAddress(),
+				memberRequest.getPhone(), members.getPoint(), memberRequest.getEmail(),
+				"註冊成功");
 	}
 
 	@Override
@@ -267,20 +264,24 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("找不到符合搜尋關鍵字的會員");
 		}
 
-		Optional<Members> optional = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optional = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (!optional.isPresent()) {
 			return new MembersResponse("親!您的帳號不存在或是帳號錯誤");
 		}
 		Members members = optional.get();
-		return new MembersResponse(members.getUseraccount(), members.getPassword(), members.getUsername(),
-				members.getBirthDate(), members.getAddress(), members.getPhone(), "OK");
+		return new MembersResponse(members.getUseraccount(), members.getPassword(),
+				members.getUsername(), members.getBirthDate(), members.getAddress(),
+				members.getPhone(), "OK");
 	}
 
 	@Override
 	public MembersResponse updateMember(MemberRequest memberRequest) {
-		Members members = membersDao.findByUseraccount(memberRequest.getUseraccount()).orElse(null);
+		Members members = membersDao.findByUseraccount(memberRequest.getUseraccount())
+				.orElse(null);
 		// 檢查必填欄位
-		if (!StringUtils.hasText(memberRequest.getUseraccount()) || !StringUtils.hasText(memberRequest.getPassword())) {
+		if (!StringUtils.hasText(memberRequest.getUseraccount())
+				|| !StringUtils.hasText(memberRequest.getPassword())) {
 			return new MembersResponse("失敗！帳號和密碼為必填欄位");
 		}
 
@@ -306,7 +307,8 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		// 檢查帳號是否已經存在
-		Optional<Members> optionMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionMember = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (!optionMember.isPresent()) {
 			return new MembersResponse(memberRequest.getUseraccount(), "失敗！帳號不存在");
 		}
@@ -325,8 +327,9 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		Members updatedMember = membersDao.save(members);
-		return new MembersResponse(updatedMember.getUseraccount(), updatedMember.getPassword(),
-				updatedMember.getUsername(), updatedMember.getBirthDate(), updatedMember.getAddress(),
+		return new MembersResponse(updatedMember.getUseraccount(),
+				updatedMember.getPassword(), updatedMember.getUsername(),
+				updatedMember.getBirthDate(), updatedMember.getAddress(),
 				updatedMember.getPhone(), updatedMember.getEmail(), "更新成功");
 	}
 
@@ -337,7 +340,8 @@ public class MemberServiceImpl implements MembersService {
 		}
 
 		// 檢查帳號是否存在
-		Optional<Members> optionalStudent = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionalStudent = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (!optionalStudent.isPresent()) {
 			return new MembersResponse(memberRequest.getUseraccount(), "帳號不存在");
 		}
@@ -351,23 +355,25 @@ public class MemberServiceImpl implements MembersService {
 	// 登錄用API
 	@Override
 	public MembersResponse loginMember(MemberRequest memberRequest) {
-		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionalMember = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (!optionalMember.isPresent()) {
 			return new MembersResponse("帳號密碼驗證失敗");
 		}
 
 		Members member = optionalMember.get();
-		 if (!member.getActive()) {
-		        return new MembersResponse("帳號已被停用");
-		    }
-		String storedPassword = member.getPassword();
-		String partialPassword = storedPassword.substring(0, 4); // 提取前四個字元
-		String encryptedPassword = storedPassword.substring(4); // 提取加密後的剩餘部分
-
-		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword), StandardCharsets.UTF_8);
-
-		String originalPassword = partialPassword + decodedPassword; // 將前四個字元與解碼後的密碼結合
-		if (!memberRequest.getPassword().equals(originalPassword)) {
+		if (!member.getActive()) {
+			return new MembersResponse("帳號已被停用");
+		}
+//		String storedPassword = member.getPassword();
+//		String partialPassword = storedPassword.substring(0, 4); // 提取前四個字元
+//		String encryptedPassword = storedPassword.substring(4); // 提取加密後的剩餘部分
+//
+//		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword),
+//				StandardCharsets.UTF_8);
+//
+//		String originalPassword = partialPassword + decodedPassword; // 將前四個字元與解碼後的密碼結合
+		if (!memberRequest.getPassword().equals(member.getPassword())) {
 			return new MembersResponse("密碼驗證失敗");
 		}
 
@@ -380,7 +386,8 @@ public class MemberServiceImpl implements MembersService {
 			return new MembersResponse("帳號不得為空");
 		}
 
-		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionalMember = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (optionalMember.isPresent()) {
 			return new MembersResponse("帳號已存在");
 		} else {
@@ -393,14 +400,16 @@ public class MemberServiceImpl implements MembersService {
 		if (!StringUtils.hasText(memberRequest.getUseraccount())) {
 			return new MembersResponse("帳號不得為空");
 		}
-		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionalMember = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (optionalMember.isPresent()) {
 			Members member = optionalMember.get();
 			member.setPassword(memberRequest.getPassword()); // 更新密码
 
 			membersDao.save(member);
 
-			return new MembersResponse(member.getUseraccount(), member.getPassword(), "密碼已更新");
+			return new MembersResponse(member.getUseraccount(), member.getPassword(),
+					"密碼已更新");
 		} else {
 			return new MembersResponse(memberRequest.getUseraccount(), "帳號不存在");
 		}
@@ -408,7 +417,8 @@ public class MemberServiceImpl implements MembersService {
 
 	@Override
 	public MembersResponse checkcaptcha(MemberRequest memberRequest) {
-		Optional<Members> optionalMember = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> optionalMember = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (optionalMember.isPresent()) {
 			if (optionalMember.get().getCaptcha() == memberRequest.getCaptcha()) {
 				return new MembersResponse("驗證成功");
@@ -420,28 +430,29 @@ public class MemberServiceImpl implements MembersService {
 
 	@Override
 	public MembersResponse active(MemberRequest memberRequest) {
-		Optional<Members> members = membersDao.findByUseraccount(memberRequest.getUseraccount());
+		Optional<Members> members = membersDao
+				.findByUseraccount(memberRequest.getUseraccount());
 		if (!members.isPresent()) {
 			return new MembersResponse("帳號密碼驗證失敗");
 		}
-		if (!StringUtils.hasText(memberRequest.getUseraccount()) || !StringUtils.hasText(memberRequest.getPassword())) {
+		if (!StringUtils.hasText(memberRequest.getUseraccount())
+				|| !StringUtils.hasText(memberRequest.getPassword())) {
 			return new MembersResponse("不能是空的");
 		}
-	
+
 		Members member = members.get();
 		String storedPassword = member.getPassword();
 		String partialPassword = storedPassword.substring(0, 4); // 提取前四個字元
 		String encryptedPassword = storedPassword.substring(4); // 提取加密後的剩餘部分
 
-		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword), StandardCharsets.UTF_8);
+		String decodedPassword = new String(Base64.getDecoder().decode(encryptedPassword),
+				StandardCharsets.UTF_8);
 
 		String originalPassword = partialPassword + decodedPassword; // 將前四個字元與解碼後的密碼結合
-		
-		
+
 		if (memberRequest.getPassword().equals(originalPassword)) {
 			return new MembersResponse("密碼驗證失敗");
 		}
-		
 
 		if (member.getActive()) {
 			return new MembersResponse("已登入");
@@ -459,33 +470,32 @@ public class MemberServiceImpl implements MembersService {
 
 	@Override
 	public MembersResponse stopMember(MemberRequest memberRequest) {
-	    MembersResponse response = new MembersResponse();
-	    try {
-	        // 从memberRequest中获取需要停用的会员信息
-	        String userAccount = memberRequest.getUseraccount();
-	        
-	        // 根据会员账号执行停用会员的逻辑
-	        Optional<Members> memberOptional = membersDao.findByUseraccount(userAccount);
-	        if (memberOptional.isPresent()) {
-	            Members member = memberOptional.get();
-	            member.setActive(false);
-	            membersDao.save(member);
-	            
-	            //停用會員訊息
-	            response.setMessage("停用會員成功");
+		MembersResponse response = new MembersResponse();
+		try {
+			// 从memberRequest中获取需要停用的会员信息
+			String userAccount = memberRequest.getUseraccount();
 
-	        } else {
-	            response.setMessage("找不到該會員帳號");
+			// 根据会员账号执行停用会员的逻辑
+			Optional<Members> memberOptional = membersDao.findByUseraccount(userAccount);
+			if (memberOptional.isPresent()) {
+				Members member = memberOptional.get();
+				member.setActive(false);
+				membersDao.save(member);
 
-	        }
-	    } catch (Exception e) {
-	        // 发生异常时设置错误信息
-	        response.setMessage("停用会员失败: " + e.getMessage());
+				// 停用會員訊息
+				response.setMessage("停用會員成功");
 
-	    }
-	    
-	    return new MembersResponse("已停用");
+			} else {
+				response.setMessage("找不到該會員帳號");
+
+			}
+		} catch (Exception e) {
+			// 发生异常时设置错误信息
+			response.setMessage("停用会员失败: " + e.getMessage());
+
+		}
+
+		return new MembersResponse("已停用");
 	}
-
 
 }
